@@ -25,6 +25,7 @@ export interface paths {
                 content: {
                     "application/json": {
                         email: string;
+                        name: string;
                     };
                 };
             };
@@ -40,6 +41,7 @@ export interface paths {
                                 center: {
                                     id: string;
                                     email: string;
+                                    name: string;
                                     createdAt: unknown;
                                     updatedAt: unknown;
                                 };
@@ -105,6 +107,7 @@ export interface paths {
                                 center: {
                                     id: string;
                                     email: string;
+                                    name: string;
                                     createdAt: unknown;
                                     updatedAt: unknown;
                                 };
@@ -161,6 +164,7 @@ export interface paths {
                                 center: {
                                     id: string;
                                     email: string;
+                                    name: string;
                                     createdAt: unknown;
                                     updatedAt: unknown;
                                 };
@@ -373,6 +377,7 @@ export interface components {
         Center: {
             id: string;
             email: string;
+            name: string;
             createdAt: unknown;
             updatedAt: unknown;
         };
