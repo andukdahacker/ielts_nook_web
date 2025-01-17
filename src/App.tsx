@@ -9,10 +9,12 @@ import { BrowserRouter, Route, Routes } from "react-router";
 import AuthLayout from "./features/auth/views/auth.layout";
 import RegisterView from "./features/auth/views/register.view";
 import SignInView from "./features/auth/views/sign_in.view";
+import HomeLayout from "./features/home/home.layout";
 import HomeView from "./features/home/home.view";
 
 function App() {
   const queryClient = new QueryClient();
+
   return (
     <QueryClientProvider client={queryClient}>
       <MantineProvider theme={{ fontFamily: "Montserrat, sans-serif" }}>
@@ -20,7 +22,10 @@ function App() {
         <ModalsProvider>
           <BrowserRouter>
             <Routes>
-              <Route index path="/" element={<HomeView />} />
+              <Route element={<HomeLayout />}>
+                <Route index path="/" element={<HomeView />} />
+              </Route>
+
               <Route element={<AuthLayout />}>
                 <Route index path="register" element={<RegisterView />} />
                 <Route path="signIn" element={<SignInView />} />

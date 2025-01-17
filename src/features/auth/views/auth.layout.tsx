@@ -1,12 +1,20 @@
 import { Box, Flex, useMantineTheme } from "@mantine/core";
-import { Outlet } from "react-router";
+import { useEffect } from "react";
+import { Outlet, useNavigate } from "react-router";
 
 function AuthLayout() {
   const theme = useMantineTheme();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (localStorage.getItem("token")) {
+      navigate("/");
+    }
+  }, [navigate]);
+
   return (
     <>
       <Flex direction="row" h={"100vh"}>
-
         <Box flex={1} p={"md"}>
           <Outlet />
         </Box>

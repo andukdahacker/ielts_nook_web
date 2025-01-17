@@ -12,6 +12,7 @@ import { useForm } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
 import { IconEye } from "@tabler/icons-react";
 import { useMutation } from "@tanstack/react-query";
+import { FirebaseError } from "firebase/app";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router";
@@ -86,11 +87,18 @@ function SignInView() {
       navigate("/");
     },
     onError: (error) => {
-      notifications.show({
-        message: "Failed to sign in due to error: " + error.message,
-      });
+      if (error instanceof FirebaseError) {
+        notifications.show({
+          message: "Failed to sign in due to error: " + error.code,
+        });
+      } else {
+        notifications.show({
+          message: "Failed to sign in due to error: " + error.message,
+        });
+      }
     },
   });
+
   return (
     <>
       <Center>
