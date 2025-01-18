@@ -9,16 +9,16 @@ import {
   useMantineTheme,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { notifications } from "@mantine/notifications";
-import { IconEye, IconX } from "@tabler/icons-react";
-import { useMutation } from "@tanstack/react-query";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { IconEye } from "@tabler/icons-react";
 import { useState } from "react";
-import { Link, useNavigate } from "react-router";
-import client from "../../../core/client";
-import { firebaseAuth } from "../../../core/firebase";
+import { Link } from "react-router";
+import {
+  validateEmail,
+  validatePassword,
+} from "../../../core/utils/validation_utils";
+import useRegister from "../hooks/use_register.hook";
 
-type RegisterFormInput = {
+export type RegisterFormInput = {
   email: string;
   password: string;
   name: string;
@@ -26,7 +26,6 @@ type RegisterFormInput = {
 
 function RegisterView() {
   const theme = useMantineTheme();
-  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const showPasswordIcon = (
     <IconEye onClick={() => setShowPassword(!showPassword)} />
@@ -39,69 +38,16 @@ function RegisterView() {
       name: "",
     },
     validate: {
-      email: (value) => (/^\S+@\S+$/.test(value) ? null : "Invalid email."),
+      email: validateEmail,
       name: (value) =>
         value.length > 3
           ? null
           : "Center name cannot be less than 3 characters.",
-      password: (value) => {
-        if (value == "") {
-          return "Please enter your password.";
-        }
-
-        if (
-          /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>?]).*$/.test(
-            value,
-          )
-        ) {
-          return null;
-        }
-
-        return "Password must contain at least 1 uppercase letter, 1 lowercase letter, 1 number, and 1 symbol.";
-      },
+      password: validatePassword,
     },
   });
 
-  const { mutate, isPending } = useMutation({
-    mutationFn: async (values: RegisterFormInput) => {
-      const userCredentials = await createUserWithEmailAndPassword(
-        firebaseAuth,
-        values.email,
-        values.password,
-      );
-
-      const result = await client.POST("/api/center/register", {
-        body: { email: values.email, name: values.name },
-      });
-
-      if (result.error) {
-        throw new Error(result.error.error);
-      }
-
-      return {
-        center: result.data.data,
-        shouldVerifyEmail: !userCredentials.user.emailVerified,
-      };
-    },
-    onSuccess: (value) => {
-      navigate("/signIn");
-      notifications.show({
-        title: "Registered successfully",
-        message: value.shouldVerifyEmail
-          ? "We've sent a email verification request to your email address. Please verify before continuing to sign in."
-          : "Please continue to sign in.",
-        autoClose: 10000,
-      });
-    },
-    onError: (error) => {
-      notifications.show({
-        title: "Failed to register",
-        message: `Failed to register due to error: ${error.message}`,
-        color: "red",
-        icon: <IconX />,
-      });
-    },
-  });
+  const { mutate, isPending } = useRegister();
 
   return (
     <>

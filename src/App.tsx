@@ -11,9 +11,16 @@ import RegisterView from "./features/auth/views/register.view";
 import SignInView from "./features/auth/views/sign_in.view";
 import HomeLayout from "./features/home/home.layout";
 import HomeView from "./features/home/home.view";
+import UsersView from "./features/users/users.view";
 
 function App() {
-  const queryClient = new QueryClient();
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      mutations: {
+        retry: 0,
+      },
+    },
+  });
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -24,6 +31,7 @@ function App() {
             <Routes>
               <Route element={<HomeLayout />}>
                 <Route index path="/" element={<HomeView />} />
+                <Route path="/users" element={<UsersView />} />
               </Route>
 
               <Route element={<AuthLayout />}>

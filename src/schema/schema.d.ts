@@ -425,6 +425,7 @@ export interface paths {
                 query: {
                     take: number;
                     cursor?: string;
+                    searchString?: string;
                 };
                 header?: never;
                 path?: never;
@@ -567,6 +568,23 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        /** Center */
+        Center: {
+            id: string;
+            email: string;
+            name: string;
+            createdAt: unknown;
+            updatedAt: unknown;
+        };
+        /** RegisterCenterInput */
+        RegisterCenterInput: {
+            email: string;
+            name: string;
+        };
+        /** SignInCenterInput */
+        SignInCenterInput: {
+            idToken: string;
+        };
         /** UserRole */
         UserRole: "ADMIN" | "TEACHER" | "STUDENT";
         /** User */
@@ -586,13 +604,34 @@ export interface components {
             createdAt: unknown;
             updatedAt: unknown;
         };
-        /** Center */
-        Center: {
-            id: string;
+        /** CreateUserInput */
+        CreateUserInput: {
             email: string;
-            name: string;
-            createdAt: unknown;
-            updatedAt: unknown;
+            password: string;
+            role: "ADMIN" | "TEACHER" | "STUDENT";
+            username?: string;
+            firstName?: string;
+            lastName?: string;
+            phoneNumber?: string;
+        };
+        /** GetUserListInput */
+        GetUserListInput: {
+            take: number;
+            cursor?: string;
+            searchString?: string;
+        };
+        /** SignInUserInput */
+        SignInUserInput: {
+            email: string;
+            password: string;
+        };
+        /** UpdateUserInput */
+        UpdateUserInput: {
+            userId: string;
+            username?: string;
+            firstName?: string;
+            lastName?: string;
+            phoneNumber?: string;
         };
     };
     responses: never;

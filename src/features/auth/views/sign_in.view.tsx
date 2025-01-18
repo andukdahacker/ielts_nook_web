@@ -9,95 +9,39 @@ import {
   useMantineTheme,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { notifications } from "@mantine/notifications";
 import { IconEye } from "@tabler/icons-react";
-import { useMutation } from "@tanstack/react-query";
-import { FirebaseError } from "firebase/app";
-import { signInWithEmailAndPassword } from "firebase/auth";
 import { useState } from "react";
-import { Link, useNavigate } from "react-router";
-import client from "../../../core/client";
-import { firebaseAuth } from "../../../core/firebase";
+import { Link } from "react-router";
+import {
+  validateEmail,
+  validatePassword,
+} from "../../../core/utils/validation_utils";
+import useSignInCenter from "../hooks/use_sign_in_center.hook";
 
-type SignInInput = {
+export type SignInFormInput = {
   email: string;
   password: string;
 };
 
 function SignInView() {
   const theme = useMantineTheme();
-  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const showPasswordIcon = (
     <IconEye onClick={() => setShowPassword(!showPassword)} />
   );
-  const form = useForm<SignInInput>({
+  const form = useForm<SignInFormInput>({
     mode: "uncontrolled",
     initialValues: {
       email: "",
       password: "",
     },
     validate: {
-      email: (value) => (/^\S+@\S+$/.test(value) ? null : "Invalid email."),
-      password: (value) => {
-        if (value == "") {
-          return "Please enter your password.";
-        }
-
-        if (
-          /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>?]).*$/.test(
-            value,
-          )
-        ) {
-          return null;
-        }
-
-        return "Password must contain at least 1 uppercase letter, 1 lowercase letter, 1 number, and 1 symbol.";
-      },
+      email: validateEmail,
+      password: validatePassword,
     },
   });
 
-  const { mutate, isPending } = useMutation({
-    mutationFn: async (values: SignInInput) => {
-      const { email, password } = values;
-      await signInWithEmailAndPassword(firebaseAuth, email, password);
-
-      const idToken = await firebaseAuth.currentUser?.getIdToken();
-
-      if (!idToken) {
-        throw new Error("Failed to sign in");
-      }
-
-      const result = await client.POST("/api/center/signIn", {
-        body: { idToken },
-      });
-
-      if (result.error) {
-        throw new Error(result.error.error);
-      }
-
-      return result.data.data;
-    },
-    onSuccess: (value) => {
-      localStorage.setItem("token", value.token);
-      notifications.show({
-        message:
-          "Sign in successfully. Great to have you back " + value.center.name,
-      });
-      navigate("/");
-    },
-    onError: (error) => {
-      if (error instanceof FirebaseError) {
-        notifications.show({
-          message: "Failed to sign in due to error: " + error.code,
-        });
-      } else {
-        notifications.show({
-          message: "Failed to sign in due to error: " + error.message,
-        });
-      }
-    },
-  });
+  const { mutate, isPending } = useSignInCenter();
 
   return (
     <>

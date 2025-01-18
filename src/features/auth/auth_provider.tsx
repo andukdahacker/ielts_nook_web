@@ -1,26 +1,14 @@
 import { Center, Loader } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
-import { useQuery } from "@tanstack/react-query";
 import { FC, ReactNode, useEffect } from "react";
 import { useNavigate } from "react-router";
-import client from "../../core/client";
 import AuthContext from "./auth.context";
+import useMe from "./hooks/use_me.hook";
 
 const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const navigate = useNavigate();
 
-  const { data, error, isLoading } = useQuery({
-    queryKey: ["me"],
-    queryFn: async () => {
-      const result = await client.GET("/api/me/");
-
-      if (result.error) {
-        throw new Error(result.error.error);
-      }
-
-      return result.data.data;
-    },
-  });
+  const { data, error, isLoading } = useMe();
 
   useEffect(() => {
     if (error) {
