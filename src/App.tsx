@@ -9,9 +9,23 @@ import { BrowserRouter, Route, Routes } from "react-router";
 import AuthLayout from "./features/auth/views/auth.layout";
 import RegisterView from "./features/auth/views/register.view";
 import SignInView from "./features/auth/views/sign_in.view";
-import HomeLayout from "./features/home/home.layout";
-import HomeView from "./features/home/home.view";
+import ClassView from "./features/class/class.view";
+import CreateClassModal from "./features/class/create_class.modal";
+import HomeLayout from "./features/class/home/home.layout";
+import HomeView from "./features/class/home/home.view";
+import EditUserModal from "./features/users/edit_user.modal";
 import UsersView from "./features/users/users.view";
+
+const modals = {
+  editUser: EditUserModal,
+  createClass: CreateClassModal,
+};
+
+declare module "@mantine/modals" {
+  export interface MantineModalsOverride {
+    modals: typeof modals;
+  }
+}
 
 function App() {
   const queryClient = new QueryClient({
@@ -26,12 +40,13 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <MantineProvider theme={{ fontFamily: "Montserrat, sans-serif" }}>
         <Notifications />
-        <ModalsProvider>
+        <ModalsProvider modals={modals}>
           <BrowserRouter>
             <Routes>
               <Route element={<HomeLayout />}>
                 <Route index path="/" element={<HomeView />} />
                 <Route path="/users" element={<UsersView />} />
+                <Route path="/class" element={<ClassView />} />
               </Route>
 
               <Route element={<AuthLayout />}>

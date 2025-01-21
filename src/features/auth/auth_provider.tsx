@@ -12,6 +12,7 @@ const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
 
   useEffect(() => {
     if (error) {
+      localStorage.removeItem("token");
       notifications.show({ message: error.message, color: "red" });
       navigate("/signIn");
     }
@@ -23,7 +24,8 @@ const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
         authenticated: data != undefined,
         center: data?.center,
         user: data?.user,
-        role: data?.user?.role,
+        role: data?.center ? "ADMIN" : data?.user?.role,
+        centerId: data?.center ? data.center.id : data?.user?.centerId,
         isLoading,
       }}
     >

@@ -5,3 +5,5 @@ export type Center = components["schemas"]["Center"];
 export type User = components["schemas"]["User"];
 
 export type RegisterCenterInput = components["schemas"]["RegisterCenterInput"];
+export type GetCenterClassListInput =
+  components["schemas"]["GetClassListInput"];

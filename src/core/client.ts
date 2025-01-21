@@ -4,6 +4,7 @@ import { paths } from "../schema/schema";
 const authMiddleware: Middleware = {
   async onRequest({ request }) {
     const token = localStorage.getItem("token");
+
     request.headers.set("Authorization", `Bearer ${token}`);
     return request;
   },

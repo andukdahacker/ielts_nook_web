@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import AuthContext from "../auth/auth.context";
+import AuthContext from "../../auth/auth.context";
 
 function HomeView() {
   const { center, role, user } = useContext(AuthContext);

@@ -6,6 +6,7 @@ import {
   Flex,
   Group,
   Loader,
+  Menu,
   Modal,
   Space,
   Table,
@@ -13,18 +14,24 @@ import {
   TextInput,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
+import { modals, openContextModal } from "@mantine/modals";
+import { notifications } from "@mantine/notifications";
 import {
   IconDotsVertical,
+  IconEdit,
   IconFilter,
   IconPlus,
   IconReload,
   IconSearch,
+  IconTrash,
 } from "@tabler/icons-react";
 import { useCallback, useEffect, useState } from "react";
 import { Fragment } from "react/jsx-runtime";
 import useDebounce from "../../core/hooks/use_debouce";
 import { useMobile } from "../../core/utils/screen_utils";
+import { User } from "../../schema/types";
 import CreateUserView from "./create_user.view";
+import useDeleteUser from "./hooks/use_delete_user";
 import useGetUserList from "./hooks/user_get_user_list";
 
 function UsersView() {
@@ -50,7 +57,40 @@ function UsersView() {
     refetch,
     isRefetching,
   } = useGetUserList(searchString);
+
   const handleReloadClick = () => refetch();
+
+  const handleOnEditClick = async (user: User) => {
+    openContextModal({
+      modal: "editUser",
+      title: "Edit User",
+      innerProps: {
+        user,
+      },
+      fullScreen: isMobile,
+      centered: true,
+      transitionProps: { transition: "fade", duration: 200 },
+      size: "sm",
+    });
+  };
+
+  const { mutate, isPending } = useDeleteUser();
+
+  const handleOnDeleteClick = (user: User) => {
+    modals.openConfirmModal({
+      title: "Delete user",
+      children: (
+        <Text>Are you sure you want to delete this user permanently?</Text>
+      ),
+      labels: { confirm: "Delete", cancel: "Cancel" },
+      onConfirm: () => {
+        notifications.show({
+          message: "Deleting user...",
+        });
+        mutate(user.id);
+      },
+    });
+  };
 
   const allUsers = useCallback(() => {
     let userNum = 0;
@@ -139,9 +179,28 @@ function UsersView() {
                       <Table.Td>{e.email}</Table.Td>
                       <Table.Td>{e.role}</Table.Td>
                       <Table.Td>
-                        <ActionIcon variant="transparent">
-                          <IconDotsVertical />
-                        </ActionIcon>
+                        <Menu shadow="md" width={120}>
+                          <Menu.Target>
+                            <ActionIcon variant="transparent">
+                              <IconDotsVertical />
+                            </ActionIcon>
+                          </Menu.Target>
+                          <Menu.Dropdown>
+                            <Menu.Item
+                              leftSection={<IconEdit size={14} />}
+                              onClick={() => handleOnEditClick(e)}
+                            >
+                              Edit
+                            </Menu.Item>
+                            <Menu.Item
+                              leftSection={<IconTrash size={14} />}
+                              color="red"
+                              onClick={() => handleOnDeleteClick(e)}
+                            >
+                              Delete
+                            </Menu.Item>
+                          </Menu.Dropdown>
+                        </Menu>
                       </Table.Td>
                     </Table.Tr>
                   ))}

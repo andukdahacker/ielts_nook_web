@@ -2,6 +2,7 @@ import {
   Box,
   Button,
   Center,
+  Checkbox,
   Flex,
   Space,
   TextInput,
@@ -17,6 +18,7 @@ import {
   validatePassword,
 } from "../../../core/utils/validation_utils";
 import useSignInCenter from "../hooks/use_sign_in_center.hook";
+import useSignInUser from "../hooks/use_sign_in_user.hook";
 
 export type SignInFormInput = {
   email: string;
@@ -29,6 +31,9 @@ function SignInView() {
   const showPasswordIcon = (
     <IconEye onClick={() => setShowPassword(!showPassword)} />
   );
+
+  const [signInAsCenter, setSignInAsCenter] = useState(false);
+
   const form = useForm<SignInFormInput>({
     mode: "uncontrolled",
     initialValues: {
@@ -41,7 +46,11 @@ function SignInView() {
     },
   });
 
-  const { mutate, isPending } = useSignInCenter();
+  const { mutate: signInCenter, isPending: signInCenterIsPending } =
+    useSignInCenter();
+
+  const { mutate: signInUser, isPending: signInUserIsPending } =
+    useSignInUser();
 
   return (
     <>
@@ -62,7 +71,15 @@ function SignInView() {
           </Flex>
           <Space h={"md"} />
           <Box maw={400}>
-            <form onSubmit={form.onSubmit((values) => mutate(values))}>
+            <form
+              onSubmit={form.onSubmit((values) => {
+                if (signInAsCenter) {
+                  signInCenter(values);
+                } else {
+                  signInUser(values);
+                }
+              })}
+            >
               <TextInput
                 withAsterisk
                 label="Email"
@@ -84,8 +101,22 @@ function SignInView() {
 
               <Space h={"md"} />
 
+              <Checkbox
+                label="Sign in as center"
+                checked={signInAsCenter}
+                onChange={(event) =>
+                  setSignInAsCenter(event.currentTarget.checked)
+                }
+              />
+
+              <Space h={"md"} />
+
               <Center>
-                <Button type="submit" fullWidth loading={isPending}>
+                <Button
+                  type="submit"
+                  fullWidth
+                  loading={signInCenterIsPending || signInUserIsPending}
+                >
                   Sign In
                 </Button>
               </Center>

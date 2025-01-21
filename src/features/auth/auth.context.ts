@@ -7,6 +7,7 @@ interface IAuthContext {
   role?: UserRole;
   center?: Center;
   user?: User;
+  centerId?: string;
 }
 
 const AuthContext = createContext<IAuthContext>({
