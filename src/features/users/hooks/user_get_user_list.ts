@@ -3,7 +3,7 @@ import getUserList from "../network/get_user_list";
 
 function useGetUserList(searchString: string) {
   const query = useInfiniteQuery({
-    queryKey: ["users"],
+    queryKey: ["users", searchString],
     queryFn: async (value) => {
       return await getUserList(value.pageParam, searchString);
     },

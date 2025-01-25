@@ -32,18 +32,22 @@ function HomeLayout() {
   const handleSignOut = () => {
     modals.openConfirmModal({
       title: "Log out",
+      centered: true,
       children: (
         <>
           <Text size="sm">Are you sure you want to log out?</Text>
         </>
       ),
       labels: { confirm: "Log out", cancel: "Cancel" },
-      onCancel: () => modals.closeAll(),
       onConfirm: async () => {
+        const id = notifications.show({
+          message: "Logging out...",
+          autoClose: false,
+        });
         await firebaseAuth.signOut();
         localStorage.removeItem("token");
+        notifications.hide(id);
         notifications.show({ message: "Logged out successfully" });
-
         navigate("/signIn");
       },
     });

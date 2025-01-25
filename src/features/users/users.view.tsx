@@ -20,12 +20,14 @@ import {
   IconDotsVertical,
   IconEdit,
   IconFilter,
+  IconFolderRoot,
   IconPlus,
   IconReload,
   IconSearch,
   IconTrash,
 } from "@tabler/icons-react";
 import { useCallback, useEffect, useState } from "react";
+import { useNavigate } from "react-router";
 import { Fragment } from "react/jsx-runtime";
 import useDebounce from "../../core/hooks/use_debouce";
 import { useMobile } from "../../core/utils/screen_utils";
@@ -56,7 +58,7 @@ function UsersView() {
     status,
     refetch,
     isRefetching,
-  } = useGetUserList(searchString);
+  } = useGetUserList(debouncedSearchString);
 
   const handleReloadClick = () => refetch();
 
@@ -74,20 +76,24 @@ function UsersView() {
     });
   };
 
-  const { mutate, isPending } = useDeleteUser();
+  const { mutateAsync } = useDeleteUser();
 
   const handleOnDeleteClick = (user: User) => {
     modals.openConfirmModal({
       title: "Delete user",
+      centered: true,
       children: (
         <Text>Are you sure you want to delete this user permanently?</Text>
       ),
       labels: { confirm: "Delete", cancel: "Cancel" },
-      onConfirm: () => {
-        notifications.show({
+      onConfirm: async () => {
+        const id = notifications.show({
           message: "Deleting user...",
+          autoClose: false,
         });
-        mutate(user.id);
+        await mutateAsync(user.id);
+
+        notifications.hide(id);
       },
     });
   };
@@ -107,6 +113,8 @@ function UsersView() {
   useEffect(() => {
     refetch();
   }, [debouncedSearchString, refetch]);
+
+  const navigate = useNavigate();
 
   return (
     <>
@@ -153,9 +161,13 @@ function UsersView() {
       </Flex>
 
       {status == "pending" ? (
-        <Loader />
+        <Center>
+          <Loader />
+        </Center>
       ) : status == "error" ? (
-        <Text>Something went wrong: {error.message}</Text>
+        <Center>
+          <Text>Something went wrong: {error.message}</Text>
+        </Center>
       ) : (
         <Table.ScrollContainer minWidth={500}>
           <Table stickyHeader>
@@ -186,6 +198,14 @@ function UsersView() {
                             </ActionIcon>
                           </Menu.Target>
                           <Menu.Dropdown>
+                            <Menu.Item
+                              leftSection={<IconFolderRoot size={14} />}
+                              onClick={() => {
+                                navigate(`/users/${e.id}`)
+                              }}
+                            >
+                              View
+                            </Menu.Item>
                             <Menu.Item
                               leftSection={<IconEdit size={14} />}
                               onClick={() => handleOnEditClick(e)}

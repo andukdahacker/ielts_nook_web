@@ -4,7 +4,7 @@ async function getUserList(cursor: string, searchString: string) {
   const result = await client.GET("/api/user/list", {
     params: {
       query: {
-        take: 1,
+        take: 20,
         cursor: cursor == "" ? undefined : cursor,
         searchString: searchString == "" ? undefined : searchString,
       },

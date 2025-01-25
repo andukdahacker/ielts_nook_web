@@ -1,14 +1,15 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 import getCenterClassList from "../network/get_center_class";
 
-function useGetCenterClassList(centerId: string) {
+function useGetCenterClassList(centerId: string, searchString: string) {
   const query = useInfiniteQuery({
-    queryKey: ["centerClass"],
+    queryKey: ["centerClass", centerId, searchString],
     queryFn: async (value) => {
       return getCenterClassList({
         take: 20,
         cursor: value.pageParam == "" ? undefined : value.pageParam,
         centerId,
+        searchString,
       });
     },
     initialPageParam: "",

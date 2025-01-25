@@ -625,7 +625,61 @@ export interface paths {
             cookie?: never;
         };
         get?: never;
-        put?: never;
+        /** @description Update a class */
+        put: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        classId: string;
+                        name?: string;
+                        description?: string;
+                        addMembers?: string[];
+                        removeMembers?: string[];
+                    };
+                };
+            };
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                class: {
+                                    id: string;
+                                    name: string;
+                                    /** @default null */
+                                    description: string | null;
+                                    createdAt: unknown;
+                                    updatedAt: unknown;
+                                };
+                            };
+                            message: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                            message: string;
+                        };
+                    };
+                };
+            };
+        };
         /** @description Create a class */
         post: {
             parameters: {
@@ -748,6 +802,58 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/class/{classId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** @description Delete a class */
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    classId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            message: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                            message: string;
+                        };
+                    };
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/class/list": {
         parameters: {
             query?: never;
@@ -762,6 +868,7 @@ export interface paths {
                     take: number;
                     cursor?: string;
                     centerId: string;
+                    searchString?: string;
                 };
                 header?: never;
                 path?: never;
@@ -778,12 +885,30 @@ export interface paths {
                         "application/json": {
                             data?: {
                                 nodes: {
-                                    id: string;
-                                    name: string;
-                                    /** @default null */
-                                    description: string | null;
-                                    createdAt: unknown;
-                                    updatedAt: unknown;
+                                    class: {
+                                        id: string;
+                                        name: string;
+                                        /** @default null */
+                                        description: string | null;
+                                        createdAt: unknown;
+                                        updatedAt: unknown;
+                                    };
+                                    members: {
+                                        id: string;
+                                        email: string;
+                                        /** @default null */
+                                        username: string | null;
+                                        /** @default null */
+                                        firstName: string | null;
+                                        /** @default null */
+                                        lastName: string | null;
+                                        centerId: string;
+                                        role: "ADMIN" | "TEACHER" | "STUDENT";
+                                        /** @default null */
+                                        phoneNumber: string | null;
+                                        createdAt: unknown;
+                                        updatedAt: unknown;
+                                    }[];
                                 }[];
                                 pageInfo: {
                                     hasNextPage: boolean;
@@ -886,11 +1011,29 @@ export interface components {
             phoneNumber?: string;
             role?: "ADMIN" | "TEACHER" | "STUDENT";
         };
+        /** Class */
+        Class: {
+            id: string;
+            name: string;
+            /** @default null */
+            description: string | null;
+            createdAt: unknown;
+            updatedAt: unknown;
+        };
         /** GetClassListInput */
         GetClassListInput: {
             take: number;
             cursor?: string;
             centerId: string;
+            searchString?: string;
+        };
+        /** UpdateClassInput */
+        UpdateClassInput: {
+            classId: string;
+            name?: string;
+            description?: string;
+            addMembers?: string[];
+            removeMembers?: string[];
         };
     };
     responses: never;
