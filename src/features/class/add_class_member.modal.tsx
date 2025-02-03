@@ -73,33 +73,33 @@ function AddClassMemberModal({
           {data?.pages.map((page, index) => (
             <Fragment key={index}>
               {page?.nodes.map((node) => {
-                const isSelected = added.find((e) => e.id == node.id);
+                const isSelected = added.find((e) => e.id == node.user.id);
                 return (
-                  <Group key={node.id} mt={"xs"}>
+                  <Group key={node.user.id} mt={"xs"}>
                     <Checkbox
                       checked={isSelected ? true : false}
                       onChange={(event) => {
                         if (event.currentTarget.checked) {
-                          addMember(node);
+                          addMember(node.user);
                         } else {
-                          removeMember(node);
+                          removeMember(node.user);
                         }
                       }}
                     />
                     <Text>
-                      {node.firstName} {node.lastName}
+                      {node.user.firstName} {node.user.lastName}
                     </Text>
 
                     <Badge
                       color={
-                        node.role == "TEACHER"
+                        node.user.role == "TEACHER"
                           ? "orange"
-                          : node.role == "ADMIN"
+                          : node.user.role == "ADMIN"
                             ? "red"
                             : "blue"
                       }
                     >
-                      {node.role}
+                      {node.user.role}
                     </Badge>
                   </Group>
                 );

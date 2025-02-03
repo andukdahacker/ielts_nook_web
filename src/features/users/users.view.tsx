@@ -1,5 +1,6 @@
 import {
   ActionIcon,
+  Badge,
   Box,
   Button,
   Center,
@@ -12,6 +13,7 @@ import {
   Table,
   Text,
   TextInput,
+  Tooltip,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { modals, openContextModal } from "@mantine/modals";
@@ -169,27 +171,49 @@ function UsersView() {
           <Text>Something went wrong: {error.message}</Text>
         </Center>
       ) : (
-        <Table.ScrollContainer minWidth={500}>
-          <Table stickyHeader>
-            <Table.Thead>
-              <Table.Tr>
-                <Table.Th>Username</Table.Th>
-                <Table.Th>Email</Table.Th>
-                <Table.Th>Role</Table.Th>
-                <Table.Th></Table.Th>
-              </Table.Tr>
-            </Table.Thead>
+        <Table
+          stickyHeader
+          striped
+          stickyHeaderOffset={65}
+          withColumnBorders
+          mt={"md"}
+        >
+          <Table.Thead>
+            <Table.Tr>
+              <Table.Th>Username</Table.Th>
+              <Table.Th>Email</Table.Th>
+              <Table.Th>Role</Table.Th>
+              <Table.Th>Classes</Table.Th>
+              <Table.Th>Phone number</Table.Th>
+              <Table.Th></Table.Th>
+            </Table.Tr>
+          </Table.Thead>
 
-            <Table.Tbody>
-              {data?.pages.map((page, index) => (
-                <Fragment key={index}>
-                  {page?.nodes.map((e) => (
-                    <Table.Tr key={e.id}>
+          <Table.Tbody>
+            {data?.pages.map((page, index) => (
+              <Fragment key={index}>
+                {page?.nodes.map((e) => {
+                  const classes = e.classes.map((c) => {
+                    if (c.description)
+                      return (
+                        <Tooltip key={c.id} label={c.description}>
+                          <Badge>{c.name}</Badge>
+                        </Tooltip>
+                      );
+
+                    return <Badge key={c.id}>{c.name}</Badge>;
+                  });
+                  return (
+                    <Table.Tr key={e.user.id}>
                       <Table.Td>
-                        {e.firstName} {e.lastName}
+                        {e.user.firstName} {e.user.lastName}
                       </Table.Td>
-                      <Table.Td>{e.email}</Table.Td>
-                      <Table.Td>{e.role}</Table.Td>
+                      <Table.Td>{e.user.email}</Table.Td>
+                      <Table.Td>{e.user.role}</Table.Td>
+                      <Table.Td>
+                        <Group>{classes}</Group>
+                      </Table.Td>
+                      <Table.Td>{e.user.phoneNumber}</Table.Td>
                       <Table.Td>
                         <Menu shadow="md" width={120}>
                           <Menu.Target>
@@ -201,21 +225,21 @@ function UsersView() {
                             <Menu.Item
                               leftSection={<IconFolderRoot size={14} />}
                               onClick={() => {
-                                navigate(`/users/${e.id}`)
+                                navigate(`/users/${e.user.id}`);
                               }}
                             >
                               View
                             </Menu.Item>
                             <Menu.Item
                               leftSection={<IconEdit size={14} />}
-                              onClick={() => handleOnEditClick(e)}
+                              onClick={() => handleOnEditClick(e.user)}
                             >
                               Edit
                             </Menu.Item>
                             <Menu.Item
                               leftSection={<IconTrash size={14} />}
                               color="red"
-                              onClick={() => handleOnDeleteClick(e)}
+                              onClick={() => handleOnDeleteClick(e.user)}
                             >
                               Delete
                             </Menu.Item>
@@ -223,23 +247,23 @@ function UsersView() {
                         </Menu>
                       </Table.Td>
                     </Table.Tr>
-                  ))}
-                </Fragment>
-              ))}
-            </Table.Tbody>
-            <Table.Caption>
-              <Center>
-                <Button
-                  disabled={!hasNextPage}
-                  loading={isFetchingNextPage}
-                  onClick={() => fetchNextPage()}
-                >
-                  {hasNextPage ? "Load more" : "End of list"}
-                </Button>
-              </Center>
-            </Table.Caption>
-          </Table>
-        </Table.ScrollContainer>
+                  );
+                })}
+              </Fragment>
+            ))}
+          </Table.Tbody>
+          <Table.Caption>
+            <Center>
+              <Button
+                disabled={!hasNextPage}
+                loading={isFetchingNextPage}
+                onClick={() => fetchNextPage()}
+              >
+                {hasNextPage ? "Load more" : "End of list"}
+              </Button>
+            </Center>
+          </Table.Caption>
+        </Table>
       )}
       <Modal
         opened={addUserModalOpened}

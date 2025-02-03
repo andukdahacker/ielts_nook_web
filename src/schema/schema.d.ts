@@ -495,20 +495,30 @@ export interface paths {
                         "application/json": {
                             data?: {
                                 nodes: {
-                                    id: string;
-                                    email: string;
-                                    /** @default null */
-                                    username: string | null;
-                                    /** @default null */
-                                    firstName: string | null;
-                                    /** @default null */
-                                    lastName: string | null;
-                                    centerId: string;
-                                    role: "ADMIN" | "TEACHER" | "STUDENT";
-                                    /** @default null */
-                                    phoneNumber: string | null;
-                                    createdAt: unknown;
-                                    updatedAt: unknown;
+                                    user: {
+                                        id: string;
+                                        email: string;
+                                        /** @default null */
+                                        username: string | null;
+                                        /** @default null */
+                                        firstName: string | null;
+                                        /** @default null */
+                                        lastName: string | null;
+                                        centerId: string;
+                                        role: "ADMIN" | "TEACHER" | "STUDENT";
+                                        /** @default null */
+                                        phoneNumber: string | null;
+                                        createdAt: unknown;
+                                        updatedAt: unknown;
+                                    };
+                                    classes: {
+                                        id: string;
+                                        name: string;
+                                        /** @default null */
+                                        description: string | null;
+                                        createdAt: unknown;
+                                        updatedAt: unknown;
+                                    }[];
                                 }[];
                                 pageInfo: {
                                     hasNextPage: boolean;
@@ -941,6 +951,332 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/exercise/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Create an exercise */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        subTypeId: string;
+                        name: string;
+                        content: unknown;
+                    };
+                };
+            };
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                exercise: {
+                                    id: string;
+                                    name: string;
+                                    content: unknown;
+                                    subTypeId: string;
+                                    /** @default null */
+                                    centerId: string | null;
+                                    createdAt: unknown;
+                                    updatedAt: unknown;
+                                };
+                            };
+                            message: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                            message: string;
+                        };
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/exercise/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Get an exercise with id */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                exercise: {
+                                    id: string;
+                                    name: string;
+                                    content: unknown;
+                                    subTypeId: string;
+                                    /** @default null */
+                                    centerId: string | null;
+                                    createdAt: unknown;
+                                    updatedAt: unknown;
+                                };
+                                subType: {
+                                    id: string;
+                                    name: string;
+                                    /** @default null */
+                                    description: string | null;
+                                    exerciseType: "READING" | "LISTENING" | "WRITING" | "SPEAKING";
+                                    createdAt: unknown;
+                                    updatedAt: unknown;
+                                };
+                            };
+                            message: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                            message: string;
+                        };
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        /** @description Delete an exercise */
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            message: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                            message: string;
+                        };
+                    };
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/exercise/subtype/list": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Get list of exercises sub types */
+        get: {
+            parameters: {
+                query: {
+                    type: "READING" | "LISTENING" | "WRITING" | "SPEAKING";
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                exerciseSubTypes: {
+                                    id: string;
+                                    name: string;
+                                    /** @default null */
+                                    description: string | null;
+                                    exerciseType: "READING" | "LISTENING" | "WRITING" | "SPEAKING";
+                                    createdAt: unknown;
+                                    updatedAt: unknown;
+                                }[];
+                            };
+                            message: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                            message: string;
+                        };
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/exercise/list": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Get list of exercises */
+        get: {
+            parameters: {
+                query: {
+                    take: number;
+                    cursor?: string;
+                    type?: "READING" | "LISTENING" | "WRITING" | "SPEAKING";
+                    subTypeIds?: string[];
+                    isPublic: boolean;
+                    searchString?: string;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data?: {
+                                nodes: {
+                                    subType: {
+                                        id: string;
+                                        name: string;
+                                        /** @default null */
+                                        description: string | null;
+                                        exerciseType: "READING" | "LISTENING" | "WRITING" | "SPEAKING";
+                                        createdAt: unknown;
+                                        updatedAt: unknown;
+                                    };
+                                    exercise: {
+                                        id: string;
+                                        name: string;
+                                        content: unknown;
+                                        subTypeId: string;
+                                        /** @default null */
+                                        centerId: string | null;
+                                        createdAt: unknown;
+                                        updatedAt: unknown;
+                                    };
+                                }[];
+                                pageInfo: {
+                                    hasNextPage: boolean;
+                                    cursor?: string;
+                                };
+                            };
+                            message: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                            message: string;
+                        };
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -1034,6 +1370,89 @@ export interface components {
             description?: string;
             addMembers?: string[];
             removeMembers?: string[];
+        };
+        /** ReadingQuestionOption */
+        ReadingQuestionOption: {
+            content: string;
+            order: number;
+            value: string;
+        };
+        /** ReadingExerciseQuestion */
+        ReadingExerciseQuestion: {
+            content: string;
+            correctAnswer: string;
+            order: number;
+            options: {
+                content: string;
+                order: number;
+                value: string;
+            }[];
+        };
+        /** ReadingExerciseTask */
+        ReadingExerciseTask: {
+            instructions: string;
+            questions: {
+                content: string;
+                correctAnswer: string;
+                order: number;
+                options: {
+                    content: string;
+                    order: number;
+                    value: string;
+                }[];
+            }[];
+        };
+        /** ReadingExercise */
+        ReadingExercise: {
+            title: string;
+            content: string;
+            tasks: {
+                instructions: string;
+                questions: {
+                    content: string;
+                    correctAnswer: string;
+                    order: number;
+                    options: {
+                        content: string;
+                        order: number;
+                        value: string;
+                    }[];
+                }[];
+            }[];
+        };
+        /** ReadingExerciseType */
+        ReadingExerciseType: "Multiple choice" | "True/False/Not Given";
+        /** ExerciseType */
+        ExerciseType: "READING" | "LISTENING" | "WRITING" | "SPEAKING";
+        /** Exercise */
+        Exercise: {
+            id: string;
+            name: string;
+            content: unknown;
+            subTypeId: string;
+            /** @default null */
+            centerId: string | null;
+            createdAt: unknown;
+            updatedAt: unknown;
+        };
+        /** ExerciseSubType */
+        ExerciseSubType: {
+            id: string;
+            name: string;
+            /** @default null */
+            description: string | null;
+            exerciseType: "READING" | "LISTENING" | "WRITING" | "SPEAKING";
+            createdAt: unknown;
+            updatedAt: unknown;
+        };
+        /** GetExerciseListInput */
+        GetExerciseListInput: {
+            take: number;
+            cursor?: string;
+            type?: "READING" | "LISTENING" | "WRITING" | "SPEAKING";
+            subTypeIds?: string[];
+            isPublic: boolean;
+            searchString?: string;
         };
     };
     responses: never;

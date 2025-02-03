@@ -116,51 +116,49 @@ function AdminClassView() {
             <Text>{error.message}</Text>
           </Center>
         ) : (
-          <Table.ScrollContainer minWidth={500}>
-            <Table stickyHeader>
-              <Table.Thead>
-                <Table.Tr>
-                  <Table.Th>Class name</Table.Th>
-                  <Table.Th>Description</Table.Th>
-                  <Table.Th>No. of students</Table.Th>
-                  <Table.Th>Teachers</Table.Th>
-                  <Table.Th></Table.Th>
-                </Table.Tr>
-              </Table.Thead>
+          <Table stickyHeader stickyHeaderOffset={65} withColumnBorders>
+            <Table.Thead>
+              <Table.Tr>
+                <Table.Th>Class name</Table.Th>
+                <Table.Th>Description</Table.Th>
+                <Table.Th>No. of students</Table.Th>
+                <Table.Th>Teachers</Table.Th>
+                <Table.Th></Table.Th>
+              </Table.Tr>
+            </Table.Thead>
 
-              <Table.Tbody>
-                {classes?.map((e) => {
-                  const klass = e?.class;
-                  const students = e?.members.filter(
-                    (member) => member.role == "STUDENT",
-                  );
-                  const teachers = e?.members.filter(
-                    (member) => member.role == "TEACHER",
-                  );
+            <Table.Tbody>
+              {classes?.map((e) => {
+                const klass = e?.class;
+                const students = e?.members.filter(
+                  (member) => member.role == "STUDENT",
+                );
+                const teachers = e?.members.filter(
+                  (member) => member.role == "TEACHER",
+                );
 
-                  return (
-                    <ClassRow
-                      key={klass?.id}
-                      klass={klass!}
-                      students={students!}
-                      teachers={teachers!}
-                    />
-                  );
-                })}
-              </Table.Tbody>
-              <Table.Caption>
-                <Center>
-                  <Button
-                    disabled={!hasNextPage}
-                    loading={isFetchingNextPage}
-                    onClick={() => fetchNextPage()}
-                  >
-                    {hasNextPage ? "Load more" : "End of list"}
-                  </Button>
-                </Center>
-              </Table.Caption>
-            </Table>
-          </Table.ScrollContainer>
+                return (
+                  <ClassRow
+                    key={klass?.id}
+                    klass={klass!}
+                    students={students!}
+                    teachers={teachers!}
+                  />
+                );
+              })}
+            </Table.Tbody>
+            <Table.Caption>
+              <Center>
+                <Button
+                  disabled={!hasNextPage}
+                  loading={isFetchingNextPage}
+                  onClick={() => fetchNextPage()}
+                >
+                  {hasNextPage ? "Load more" : "End of list"}
+                </Button>
+              </Center>
+            </Table.Caption>
+          </Table>
         )}
       </Stack>
 

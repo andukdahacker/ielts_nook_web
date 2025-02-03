@@ -14,8 +14,9 @@ import { modals } from "@mantine/modals";
 import { notifications } from "@mantine/notifications";
 import { IconLogout, IconMoon, IconSun } from "@tabler/icons-react";
 import { Outlet, useNavigate } from "react-router";
-import { firebaseAuth } from "../../../core/firebase";
-import AuthProvider from "../../auth/auth_provider";
+
+import { firebaseAuth } from "../../core/firebase";
+import AuthProvider from "../auth/auth_provider";
 import NavBarView from "./navbar.view";
 
 function HomeLayout() {
