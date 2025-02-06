@@ -57,17 +57,24 @@ function HomeLayout() {
   return (
     <AuthProvider>
       <AppShell
+        layout="alt"
         header={{ height: 65 }}
         navbar={{
-          width: 300,
+          width: 240,
           breakpoint: "sm",
           collapsed: { mobile: !mobileOpened, desktop: !desktopOpened },
         }}
-        padding="md"
       >
-        <AppShell.Header p={"xs"}>
-          <Flex justify={"center"} direction={"row"} w="100%">
-            <Group w="100%" justify="start">
+        <AppShell.Header>
+          <Flex
+            justify={"center"}
+            direction={"row"}
+            align={"center"}
+            w="100%"
+            h={"100%"}
+            p={"xs"}
+          >
+            <Group w="100%" justify="start" align="center">
               <Burger
                 opened={mobileOpened}
                 onClick={toggleMobile}
@@ -109,13 +116,15 @@ function HomeLayout() {
             <NavBarView />
           </AppShell.Section>
           <AppShell.Section>
-            <ActionIcon
-              variant="transparent"
-              aria-label="logOut"
-              onClick={handleSignOut}
-            >
-              <IconLogout />
-            </ActionIcon>
+            <Group>
+              <ActionIcon
+                variant="transparent"
+                aria-label="logOut"
+                onClick={handleSignOut}
+              >
+                <IconLogout />
+              </ActionIcon>
+            </Group>
           </AppShell.Section>
         </AppShell.Navbar>
         <AppShell.Main>

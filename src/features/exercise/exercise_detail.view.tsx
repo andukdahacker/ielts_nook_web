@@ -1,6 +1,6 @@
-import { Center, Loader, Text } from "@mantine/core";
+import { Center, Loader } from "@mantine/core";
 import { useParams } from "react-router";
-import { ReadingExercise, ReadingExerciseType } from "../../schema/types";
+import ReadingTasks from "./components/reading/reading_tasks.layout";
 import useGetExercise from "./hooks/use_get_exercise";
 
 function ExerciseDetailView() {
@@ -18,27 +18,10 @@ function ExerciseDetailView() {
     case "error":
       return <Center>{error.message}</Center>;
     case "success": {
-      const type = data.subType.exerciseType;
+      const type = data.exercise.type;
       switch (type) {
         case "READING": {
-          const subType = data.subType.name as ReadingExerciseType;
-
-          switch (subType) {
-            case "Multiple choice": {
-              const content = data.exercise.content as ReadingExercise;
-              return (
-                <>
-                  <Text>{content.title}</Text>
-                  <Text>{content.content}</Text>
-                </>
-              );
-            }
-
-            case "True/False/Not Given":
-              return <>True false</>;
-            default:
-              return <></>;
-          }
+          return <ReadingTasks exercise={data.exercise} />;
         }
         case "LISTENING":
         case "SPEAKING":

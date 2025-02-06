@@ -7,34 +7,35 @@ import {
   Group,
   Loader,
   Menu,
-  Modal,
-  Space,
+  ScrollArea,
   Table,
   Text,
   TextInput,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import {
+  IconBook,
   IconDotsVertical,
+  IconEar,
   IconEdit,
   IconFilter,
   IconFolderRoot,
+  IconMessage,
   IconPlus,
   IconReload,
   IconSearch,
   IconTrash,
+  IconWriting,
 } from "@tabler/icons-react";
 import { Fragment, useCallback, useState } from "react";
 import { useNavigate } from "react-router";
 import useDebounce from "../../core/hooks/use_debouce";
-import { useMobile } from "../../core/utils/screen_utils";
 import useGetExerciseList from "./hooks/use_get_exercise_list";
 
 function ExerciseView() {
   const [searchString, setSearchString] = useState("");
   const debouncedSearchString = useDebounce(searchString, 500);
   const [opened, { close, open }] = useDisclosure(false);
-  const isMobile = useMobile();
 
   const {
     data,
@@ -63,136 +64,159 @@ function ExerciseView() {
 
   return (
     <>
-      <Box visibleFrom="sm">
-        <Text size="md" fw={"bold"}>
-          Exercises bank
-        </Text>
-        <Text size="xs">Manage your exercises and tests here.</Text>
-      </Box>
-      <Space h={"16"} />
-      <Flex direction={"row"} justify={"space-between"}>
-        <Group visibleFrom="sm">
-          <Text size="md" fw={"bold"}>
-            All exercises
-          </Text>
-          <Text c="gray.5">{allExercises()}</Text>
-        </Group>
-        <Group>
-          <ActionIcon
-            onClick={() => {
-              refetch();
-            }}
-            loading={isRefetching}
-          >
-            <IconReload />
-          </ActionIcon>
-          <TextInput
-            leftSection={<IconSearch />}
-            placeholder="exercises name"
-            value={searchString}
-            onChange={(value) => {
-              setSearchString(value.currentTarget.value);
-            }}
-          />
-          <ActionIcon>
-            <IconFilter />
-          </ActionIcon>
-          <Button leftSection={<IconPlus />} size="xs" onClick={open}>
-            Add exercise
-          </Button>
-        </Group>
-      </Flex>
+      <Box p={"16px"}>
+        <Flex direction={"row"} justify={"space-between"}>
+          <Group visibleFrom="sm">
+            <Text size="md" fw={"bold"}>
+              All exercises
+            </Text>
+            <Text c="gray.5">{allExercises()}</Text>
+          </Group>
+          <Group>
+            <ActionIcon
+              onClick={() => {
+                refetch();
+              }}
+              loading={isRefetching}
+            >
+              <IconReload />
+            </ActionIcon>
+            <TextInput
+              leftSection={<IconSearch />}
+              placeholder="exercises name"
+              value={searchString}
+              onChange={(value) => {
+                setSearchString(value.currentTarget.value);
+              }}
+            />
+            <ActionIcon>
+              <IconFilter />
+            </ActionIcon>
+            <Menu trigger="hover">
+              <Menu.Target>
+                <Button
+                  leftSection={<IconPlus />}
+                  size="xs"
+                  onClick={() => {
+                    navigate("/exercise/composer");
+                  }}
+                >
+                  Add exercise
+                </Button>
+              </Menu.Target>
 
-      {status == "pending" ? (
-        <Center>
-          <Loader />
-        </Center>
-      ) : status == "error" ? (
-        <Center>
-          <Text>Something went wrong: {error.message}</Text>
-        </Center>
-      ) : (
-        <Table
-          stickyHeader
-          striped
-          stickyHeaderOffset={65}
-          withColumnBorders
-          mt={"md"}
-        >
-          <Table.Thead>
-            <Table.Tr>
-              <Table.Th>Title</Table.Th>
-              <Table.Th>Type</Table.Th>
-              <Table.Th>Format</Table.Th>
-              <Table.Th></Table.Th>
-            </Table.Tr>
-          </Table.Thead>
+              <Menu.Dropdown>
+                <Menu.Item
+                  leftSection={<IconBook />}
+                  onClick={() => {
+                    navigate(`/exercise/composer?type=reading`);
+                  }}
+                >
+                  Reading
+                </Menu.Item>
+                <Menu.Item
+                  leftSection={<IconEar />}
+                  onClick={() => {
+                    navigate(`/exercise/composer?type=listening`);
+                  }}
+                >
+                  Listening
+                </Menu.Item>
+                <Menu.Item
+                  leftSection={<IconWriting />}
+                  onClick={() => {
+                    navigate(`/exercise/composer?type=writing`);
+                  }}
+                >
+                  Writing
+                </Menu.Item>
+                <Menu.Item
+                  leftSection={<IconMessage />}
+                  onClick={() => {
+                    navigate(`/exercise/composer?type=speaking`);
+                  }}
+                >
+                  Speaking
+                </Menu.Item>
+              </Menu.Dropdown>
+            </Menu>
+          </Group>
+        </Flex>
 
-          <Table.Tbody>
-            {data?.pages.map((page, index) => (
-              <Fragment key={index}>
-                {page?.nodes.map((e) => (
-                  <Table.Tr key={e.exercise.id}>
-                    <Table.Td>{e.exercise.name}</Table.Td>
-                    <Table.Td>{e.subType.exerciseType}</Table.Td>
-                    <Table.Td>{e.subType.name}</Table.Td>
-                    <Table.Td>
-                      <Menu shadow="md" width={120}>
-                        <Menu.Target>
-                          <ActionIcon variant="transparent">
-                            <IconDotsVertical />
-                          </ActionIcon>
-                        </Menu.Target>
-                        <Menu.Dropdown>
-                          <Menu.Item
-                            leftSection={<IconFolderRoot size={14} />}
-                            onClick={() => {
-                              navigate(`/exercise/${e.exercise.id}`);
-                            }}
-                          >
-                            View
-                          </Menu.Item>
-                          <Menu.Item leftSection={<IconEdit size={14} />}>
-                            Edit
-                          </Menu.Item>
-                          <Menu.Item
-                            leftSection={<IconTrash size={14} />}
-                            color="red"
-                          >
-                            Delete
-                          </Menu.Item>
-                        </Menu.Dropdown>
-                      </Menu>
-                    </Table.Td>
-                  </Table.Tr>
+        {status == "pending" ? (
+          <Center>
+            <Loader />
+          </Center>
+        ) : status == "error" ? (
+          <Center>
+            <Text>Something went wrong: {error.message}</Text>
+          </Center>
+        ) : (
+          <ScrollArea h={"calc(100vh - 48px - 32px - 65px)"}>
+            <Table stickyHeader striped withColumnBorders>
+              <Table.Thead>
+                <Table.Tr>
+                  <Table.Th>Title</Table.Th>
+                  <Table.Th>Type</Table.Th>
+                  <Table.Th></Table.Th>
+                </Table.Tr>
+              </Table.Thead>
+
+              <Table.Tbody>
+                {data?.pages.map((page, index) => (
+                  <Fragment key={index}>
+                    {page?.nodes.map((e) => (
+                      <Table.Tr key={e.id}>
+                        <Table.Td>{e.name}</Table.Td>
+                        <Table.Td>{e.type}</Table.Td>
+                        <Table.Td>
+                          <Menu shadow="md" width={120}>
+                            <Menu.Target>
+                              <ActionIcon variant="transparent">
+                                <IconDotsVertical />
+                              </ActionIcon>
+                            </Menu.Target>
+                            <Menu.Dropdown>
+                              <Menu.Item
+                                leftSection={<IconFolderRoot size={14} />}
+                                onClick={() => {
+                                  navigate(`/exercise/${e.id}`);
+                                }}
+                              >
+                                View
+                              </Menu.Item>
+                              <Menu.Item leftSection={<IconEdit size={14} />}>
+                                Edit
+                              </Menu.Item>
+                              <Menu.Item
+                                leftSection={<IconTrash size={14} />}
+                                color="red"
+                              >
+                                Delete
+                              </Menu.Item>
+                            </Menu.Dropdown>
+                          </Menu>
+                        </Table.Td>
+                      </Table.Tr>
+                    ))}
+                  </Fragment>
                 ))}
-              </Fragment>
-            ))}
-          </Table.Tbody>
-          <Table.Caption>
-            <Center>
-              <Button
-                disabled={!hasNextPage}
-                loading={isFetchingNextPage}
-                onClick={() => fetchNextPage()}
-              >
-                {hasNextPage ? "Load more" : "End of list"}
-              </Button>
-            </Center>
-          </Table.Caption>
-        </Table>
-      )}
-      <Modal
-        opened={opened}
-        onClose={close}
-        size={"sm"}
-        title={"Create exercise"}
-        fullScreen={isMobile}
-        transitionProps={{ transition: "fade", duration: 200 }}
-        centered={true}
-      >
-        Create exercise
-      </Modal>
+              </Table.Tbody>
+              <Table.Caption>
+                <Center>
+                  <Button
+                    disabled={!hasNextPage}
+                    loading={isFetchingNextPage}
+                    onClick={() => fetchNextPage()}
+                  >
+                    {hasNextPage ? "Load more" : "End of list"}
+                  </Button>
+                </Center>
+              </Table.Caption>
+            </Table>
+          </ScrollArea>
+        )}
+      </Box>
     </>
   );
 }

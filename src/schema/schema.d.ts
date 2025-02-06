@@ -971,9 +971,9 @@ export interface paths {
             requestBody: {
                 content: {
                     "application/json": {
-                        subTypeId: string;
                         name: string;
                         content: unknown;
+                        type: "READING" | "LISTENING" | "WRITING" | "SPEAKING";
                     };
                 };
             };
@@ -989,8 +989,8 @@ export interface paths {
                                 exercise: {
                                     id: string;
                                     name: string;
+                                    type: "READING" | "LISTENING" | "WRITING" | "SPEAKING";
                                     content: unknown;
-                                    subTypeId: string;
                                     /** @default null */
                                     centerId: string | null;
                                     createdAt: unknown;
@@ -1051,19 +1051,10 @@ export interface paths {
                                 exercise: {
                                     id: string;
                                     name: string;
+                                    type: "READING" | "LISTENING" | "WRITING" | "SPEAKING";
                                     content: unknown;
-                                    subTypeId: string;
                                     /** @default null */
                                     centerId: string | null;
-                                    createdAt: unknown;
-                                    updatedAt: unknown;
-                                };
-                                subType: {
-                                    id: string;
-                                    name: string;
-                                    /** @default null */
-                                    description: string | null;
-                                    exerciseType: "READING" | "LISTENING" | "WRITING" | "SPEAKING";
                                     createdAt: unknown;
                                     updatedAt: unknown;
                                 };
@@ -1130,69 +1121,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/exercise/subtype/list": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description Get list of exercises sub types */
-        get: {
-            parameters: {
-                query: {
-                    type: "READING" | "LISTENING" | "WRITING" | "SPEAKING";
-                };
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description Default Response */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            data: {
-                                exerciseSubTypes: {
-                                    id: string;
-                                    name: string;
-                                    /** @default null */
-                                    description: string | null;
-                                    exerciseType: "READING" | "LISTENING" | "WRITING" | "SPEAKING";
-                                    createdAt: unknown;
-                                    updatedAt: unknown;
-                                }[];
-                            };
-                            message: string;
-                        };
-                    };
-                };
-                /** @description Default Response */
-                500: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            error: string;
-                            message: string;
-                        };
-                    };
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/api/exercise/list": {
         parameters: {
             query?: never;
@@ -1207,7 +1135,6 @@ export interface paths {
                     take: number;
                     cursor?: string;
                     type?: "READING" | "LISTENING" | "WRITING" | "SPEAKING";
-                    subTypeIds?: string[];
                     isPublic: boolean;
                     searchString?: string;
                 };
@@ -1226,25 +1153,14 @@ export interface paths {
                         "application/json": {
                             data?: {
                                 nodes: {
-                                    subType: {
-                                        id: string;
-                                        name: string;
-                                        /** @default null */
-                                        description: string | null;
-                                        exerciseType: "READING" | "LISTENING" | "WRITING" | "SPEAKING";
-                                        createdAt: unknown;
-                                        updatedAt: unknown;
-                                    };
-                                    exercise: {
-                                        id: string;
-                                        name: string;
-                                        content: unknown;
-                                        subTypeId: string;
-                                        /** @default null */
-                                        centerId: string | null;
-                                        createdAt: unknown;
-                                        updatedAt: unknown;
-                                    };
+                                    id: string;
+                                    name: string;
+                                    type: "READING" | "LISTENING" | "WRITING" | "SPEAKING";
+                                    content: unknown;
+                                    /** @default null */
+                                    centerId: string | null;
+                                    createdAt: unknown;
+                                    updatedAt: unknown;
                                 }[];
                                 pageInfo: {
                                     hasNextPage: boolean;
@@ -1371,14 +1287,14 @@ export interface components {
             addMembers?: string[];
             removeMembers?: string[];
         };
-        /** ReadingQuestionOption */
-        ReadingQuestionOption: {
+        /** ReadingMultipleChoiceQuestionOption */
+        ReadingMultipleChoiceQuestionOption: {
             content: string;
             order: number;
             value: string;
         };
-        /** ReadingExerciseQuestion */
-        ReadingExerciseQuestion: {
+        /** ReadingMultipleChoiceQuestion */
+        ReadingMultipleChoiceQuestion: {
             content: string;
             correctAnswer: string;
             order: number;
@@ -1388,9 +1304,9 @@ export interface components {
                 value: string;
             }[];
         };
-        /** ReadingExerciseTask */
-        ReadingExerciseTask: {
-            instructions: string;
+        /** ReadingMultipleChoiceTask */
+        ReadingMultipleChoiceTask: {
+            instructions: unknown;
             questions: {
                 content: string;
                 correctAnswer: string;
@@ -1405,43 +1321,48 @@ export interface components {
         /** ReadingExercise */
         ReadingExercise: {
             title: string;
-            content: string;
+            content: unknown;
             tasks: {
                 instructions: string;
                 questions: {
-                    content: string;
-                    correctAnswer: string;
                     order: number;
-                    options: {
-                        content: string;
-                        order: number;
-                        value: string;
-                    }[];
+                    content: string;
+                    /** ReadingTFNGOptionSchema */
+                    correctAnswer: "TRUE" | "FALSE" | "NOT GIVEN";
                 }[];
             }[];
         };
+        /** ReadingTFNGTaskSchema */
+        ReadingTFNGTaskSchema: {
+            instructions: string;
+            questions: {
+                order: number;
+                content: string;
+                /** ReadingTFNGOptionSchema */
+                correctAnswer: "TRUE" | "FALSE" | "NOT GIVEN";
+            }[];
+        };
+        /** ReadingTFNGQuestionSchema */
+        ReadingTFNGQuestionSchema: {
+            order: number;
+            content: string;
+            /** ReadingTFNGOptionSchema */
+            correctAnswer: "TRUE" | "FALSE" | "NOT GIVEN";
+        };
+        /** ReadingTFNGOptionSchema */
+        ReadingTFNGOptionSchema: "TRUE" | "FALSE" | "NOT GIVEN";
         /** ReadingExerciseType */
-        ReadingExerciseType: "Multiple choice" | "True/False/Not Given";
+        ReadingExerciseType: "Multiple choice" | "True/False/Not Given" | "Yes/No/Not Given" | "Summary Completion" | "Sentence Completion" | "Note Completion" | "Tabel Completion" | "Flowchart Completion" | "Matching heading to paragraph";
         /** ExerciseType */
         ExerciseType: "READING" | "LISTENING" | "WRITING" | "SPEAKING";
         /** Exercise */
         Exercise: {
             id: string;
             name: string;
+            type: "READING" | "LISTENING" | "WRITING" | "SPEAKING";
             content: unknown;
-            subTypeId: string;
             /** @default null */
             centerId: string | null;
-            createdAt: unknown;
-            updatedAt: unknown;
-        };
-        /** ExerciseSubType */
-        ExerciseSubType: {
-            id: string;
-            name: string;
-            /** @default null */
-            description: string | null;
-            exerciseType: "READING" | "LISTENING" | "WRITING" | "SPEAKING";
             createdAt: unknown;
             updatedAt: unknown;
         };
@@ -1450,7 +1371,6 @@ export interface components {
             take: number;
             cursor?: string;
             type?: "READING" | "LISTENING" | "WRITING" | "SPEAKING";
-            subTypeIds?: string[];
             isPublic: boolean;
             searchString?: string;
         };

@@ -7,8 +7,7 @@ import {
   Group,
   Loader,
   Modal,
-  Space,
-  Stack,
+  ScrollArea,
   Table,
   Text,
   TextInput,
@@ -69,15 +68,8 @@ function AdminClassView() {
     .flat();
   return (
     <>
-      <Stack>
-        <Box visibleFrom="sm">
-          <Text size="md" fw={"bold"}>
-            Class management
-          </Text>
-          <Text size="xs">Manage your center classes here.</Text>
-        </Box>
-        <Space h={"16"} />
-        <Flex direction={"row"} justify={"space-between"}>
+      <Box p={"16px"}>
+        <Flex direction={"row"} justify={"space-between"} h={"48px"}>
           <Group visibleFrom="sm">
             <Text size="md" fw={"bold"}>
               All classes
@@ -116,51 +108,53 @@ function AdminClassView() {
             <Text>{error.message}</Text>
           </Center>
         ) : (
-          <Table stickyHeader stickyHeaderOffset={65} withColumnBorders>
-            <Table.Thead>
-              <Table.Tr>
-                <Table.Th>Class name</Table.Th>
-                <Table.Th>Description</Table.Th>
-                <Table.Th>No. of students</Table.Th>
-                <Table.Th>Teachers</Table.Th>
-                <Table.Th></Table.Th>
-              </Table.Tr>
-            </Table.Thead>
+          <ScrollArea h={"calc(100vh - 48px - 32px - 65px)"}>
+            <Table stickyHeader withColumnBorders withTableBorder>
+              <Table.Thead>
+                <Table.Tr>
+                  <Table.Th>Class name</Table.Th>
+                  <Table.Th>Description</Table.Th>
+                  <Table.Th>No. of students</Table.Th>
+                  <Table.Th>Teachers</Table.Th>
+                  <Table.Th></Table.Th>
+                </Table.Tr>
+              </Table.Thead>
 
-            <Table.Tbody>
-              {classes?.map((e) => {
-                const klass = e?.class;
-                const students = e?.members.filter(
-                  (member) => member.role == "STUDENT",
-                );
-                const teachers = e?.members.filter(
-                  (member) => member.role == "TEACHER",
-                );
+              <Table.Tbody>
+                {classes?.map((e) => {
+                  const klass = e?.class;
+                  const students = e?.members.filter(
+                    (member) => member.role == "STUDENT",
+                  );
+                  const teachers = e?.members.filter(
+                    (member) => member.role == "TEACHER",
+                  );
 
-                return (
-                  <ClassRow
-                    key={klass?.id}
-                    klass={klass!}
-                    students={students!}
-                    teachers={teachers!}
-                  />
-                );
-              })}
-            </Table.Tbody>
-            <Table.Caption>
-              <Center>
-                <Button
-                  disabled={!hasNextPage}
-                  loading={isFetchingNextPage}
-                  onClick={() => fetchNextPage()}
-                >
-                  {hasNextPage ? "Load more" : "End of list"}
-                </Button>
-              </Center>
-            </Table.Caption>
-          </Table>
+                  return (
+                    <ClassRow
+                      key={klass?.id}
+                      klass={klass!}
+                      students={students!}
+                      teachers={teachers!}
+                    />
+                  );
+                })}
+              </Table.Tbody>
+              <Table.Caption>
+                <Center>
+                  <Button
+                    disabled={!hasNextPage}
+                    loading={isFetchingNextPage}
+                    onClick={() => fetchNextPage()}
+                  >
+                    {hasNextPage ? "Load more" : "End of list"}
+                  </Button>
+                </Center>
+              </Table.Caption>
+            </Table>
+          </ScrollArea>
         )}
-      </Stack>
+      </Box>
 
       <Modal
         opened={opened}

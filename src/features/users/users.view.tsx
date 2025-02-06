@@ -9,7 +9,7 @@ import {
   Loader,
   Menu,
   Modal,
-  Space,
+  ScrollArea,
   Table,
   Text,
   TextInput,
@@ -120,151 +120,139 @@ function UsersView() {
 
   return (
     <>
-      <Box visibleFrom="sm">
-        <Text size="md" fw={"bold"}>
-          Users management
-        </Text>
-        <Text size="xs">
-          Manage your center members and their account access here.
-        </Text>
-      </Box>
+      <Box p={"16px"}>
+        <Flex direction={"row"} justify={"space-between"} h={"48px"}>
+          <Group visibleFrom="sm">
+            <Text size="md" fw={"bold"}>
+              All users
+            </Text>
+            <Text c="gray.5">{allUsers()}</Text>
+          </Group>
+          <Group>
+            <ActionIcon onClick={handleReloadClick} loading={isRefetching}>
+              <IconReload />
+            </ActionIcon>
+            <TextInput
+              leftSection={<IconSearch />}
+              placeholder="user's name"
+              value={searchString}
+              onChange={(value) => {
+                setSearchString(value.currentTarget.value);
+              }}
+            />
+            <ActionIcon>
+              <IconFilter />
+            </ActionIcon>
+            <Button
+              leftSection={<IconPlus />}
+              size="xs"
+              onClick={handleAddUserClick}
+            >
+              Add user
+            </Button>
+          </Group>
+        </Flex>
 
-      <Space h={"16"} />
-      <Flex direction={"row"} justify={"space-between"}>
-        <Group visibleFrom="sm">
-          <Text size="md" fw={"bold"}>
-            All users
-          </Text>
-          <Text c="gray.5">{allUsers()}</Text>
-        </Group>
-        <Group>
-          <ActionIcon onClick={handleReloadClick} loading={isRefetching}>
-            <IconReload />
-          </ActionIcon>
-          <TextInput
-            leftSection={<IconSearch />}
-            placeholder="user's name"
-            value={searchString}
-            onChange={(value) => {
-              setSearchString(value.currentTarget.value);
-            }}
-          />
-          <ActionIcon>
-            <IconFilter />
-          </ActionIcon>
-          <Button
-            leftSection={<IconPlus />}
-            size="xs"
-            onClick={handleAddUserClick}
-          >
-            Add user
-          </Button>
-        </Group>
-      </Flex>
+        {status == "pending" ? (
+          <Center>
+            <Loader />
+          </Center>
+        ) : status == "error" ? (
+          <Center>
+            <Text>Something went wrong: {error.message}</Text>
+          </Center>
+        ) : (
+          <ScrollArea h={"calc(100vh - 48px - 32px - 65px)"}>
+            <Table stickyHeader striped withColumnBorders withTableBorder>
+              <Table.Thead>
+                <Table.Tr>
+                  <Table.Th>Username</Table.Th>
+                  <Table.Th>Email</Table.Th>
+                  <Table.Th>Role</Table.Th>
+                  <Table.Th>Classes</Table.Th>
+                  <Table.Th>Phone number</Table.Th>
+                  <Table.Th></Table.Th>
+                </Table.Tr>
+              </Table.Thead>
 
-      {status == "pending" ? (
-        <Center>
-          <Loader />
-        </Center>
-      ) : status == "error" ? (
-        <Center>
-          <Text>Something went wrong: {error.message}</Text>
-        </Center>
-      ) : (
-        <Table
-          stickyHeader
-          striped
-          stickyHeaderOffset={65}
-          withColumnBorders
-          mt={"md"}
-        >
-          <Table.Thead>
-            <Table.Tr>
-              <Table.Th>Username</Table.Th>
-              <Table.Th>Email</Table.Th>
-              <Table.Th>Role</Table.Th>
-              <Table.Th>Classes</Table.Th>
-              <Table.Th>Phone number</Table.Th>
-              <Table.Th></Table.Th>
-            </Table.Tr>
-          </Table.Thead>
+              <Table.Tbody>
+                {data?.pages.map((page, index) => (
+                  <Fragment key={index}>
+                    {page?.nodes.map((e) => {
+                      const classes = e.classes.map((c) => {
+                        if (c.description)
+                          return (
+                            <Tooltip key={c.id} label={c.description}>
+                              <Badge>{c.name}</Badge>
+                            </Tooltip>
+                          );
 
-          <Table.Tbody>
-            {data?.pages.map((page, index) => (
-              <Fragment key={index}>
-                {page?.nodes.map((e) => {
-                  const classes = e.classes.map((c) => {
-                    if (c.description)
+                        return <Badge key={c.id}>{c.name}</Badge>;
+                      });
                       return (
-                        <Tooltip key={c.id} label={c.description}>
-                          <Badge>{c.name}</Badge>
-                        </Tooltip>
+                        <Table.Tr key={e.user.id}>
+                          <Table.Td>
+                            {e.user.firstName} {e.user.lastName}
+                          </Table.Td>
+                          <Table.Td>{e.user.email}</Table.Td>
+                          <Table.Td>{e.user.role}</Table.Td>
+                          <Table.Td>
+                            <Group>{classes}</Group>
+                          </Table.Td>
+                          <Table.Td>{e.user.phoneNumber}</Table.Td>
+                          <Table.Td>
+                            <Menu shadow="md" width={120}>
+                              <Menu.Target>
+                                <ActionIcon variant="transparent">
+                                  <IconDotsVertical />
+                                </ActionIcon>
+                              </Menu.Target>
+                              <Menu.Dropdown>
+                                <Menu.Item
+                                  leftSection={<IconFolderRoot size={14} />}
+                                  onClick={() => {
+                                    navigate(`/users/${e.user.id}`);
+                                  }}
+                                >
+                                  View
+                                </Menu.Item>
+                                <Menu.Item
+                                  leftSection={<IconEdit size={14} />}
+                                  onClick={() => handleOnEditClick(e.user)}
+                                >
+                                  Edit
+                                </Menu.Item>
+                                <Menu.Item
+                                  leftSection={<IconTrash size={14} />}
+                                  color="red"
+                                  onClick={() => handleOnDeleteClick(e.user)}
+                                >
+                                  Delete
+                                </Menu.Item>
+                              </Menu.Dropdown>
+                            </Menu>
+                          </Table.Td>
+                        </Table.Tr>
                       );
-
-                    return <Badge key={c.id}>{c.name}</Badge>;
-                  });
-                  return (
-                    <Table.Tr key={e.user.id}>
-                      <Table.Td>
-                        {e.user.firstName} {e.user.lastName}
-                      </Table.Td>
-                      <Table.Td>{e.user.email}</Table.Td>
-                      <Table.Td>{e.user.role}</Table.Td>
-                      <Table.Td>
-                        <Group>{classes}</Group>
-                      </Table.Td>
-                      <Table.Td>{e.user.phoneNumber}</Table.Td>
-                      <Table.Td>
-                        <Menu shadow="md" width={120}>
-                          <Menu.Target>
-                            <ActionIcon variant="transparent">
-                              <IconDotsVertical />
-                            </ActionIcon>
-                          </Menu.Target>
-                          <Menu.Dropdown>
-                            <Menu.Item
-                              leftSection={<IconFolderRoot size={14} />}
-                              onClick={() => {
-                                navigate(`/users/${e.user.id}`);
-                              }}
-                            >
-                              View
-                            </Menu.Item>
-                            <Menu.Item
-                              leftSection={<IconEdit size={14} />}
-                              onClick={() => handleOnEditClick(e.user)}
-                            >
-                              Edit
-                            </Menu.Item>
-                            <Menu.Item
-                              leftSection={<IconTrash size={14} />}
-                              color="red"
-                              onClick={() => handleOnDeleteClick(e.user)}
-                            >
-                              Delete
-                            </Menu.Item>
-                          </Menu.Dropdown>
-                        </Menu>
-                      </Table.Td>
-                    </Table.Tr>
-                  );
-                })}
-              </Fragment>
-            ))}
-          </Table.Tbody>
-          <Table.Caption>
-            <Center>
-              <Button
-                disabled={!hasNextPage}
-                loading={isFetchingNextPage}
-                onClick={() => fetchNextPage()}
-              >
-                {hasNextPage ? "Load more" : "End of list"}
-              </Button>
-            </Center>
-          </Table.Caption>
-        </Table>
-      )}
+                    })}
+                  </Fragment>
+                ))}
+              </Table.Tbody>
+              <Table.Caption>
+                <Center>
+                  <Button
+                    disabled={!hasNextPage}
+                    loading={isFetchingNextPage}
+                    onClick={() => fetchNextPage()}
+                  >
+                    {hasNextPage ? "Load more" : "End of list"}
+                  </Button>
+                </Center>
+              </Table.Caption>
+            </Table>
+          </ScrollArea>
+        )}
+      </Box>
       <Modal
         opened={addUserModalOpened}
         onClose={closeAddUserModal}

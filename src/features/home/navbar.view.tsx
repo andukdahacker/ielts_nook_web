@@ -1,4 +1,4 @@
-import { Box, NavLink } from "@mantine/core";
+import { NavLink, Stack } from "@mantine/core";
 import {
   Icon,
   IconBooks,
@@ -72,7 +72,11 @@ function NavBarView() {
     );
   });
 
-  return <Box>{items}</Box>;
+  return (
+    <Stack justify="center" align="center">
+      {items}
+    </Stack>
+  );
 }
 
 export default NavBarView;
