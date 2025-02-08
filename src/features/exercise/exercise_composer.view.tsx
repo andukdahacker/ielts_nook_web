@@ -13,6 +13,7 @@ import {
   IconWriting,
 } from "@tabler/icons-react";
 import { useSearchParams } from "react-router";
+import ReadingComposerProvider from "./components/reading/reading_composer.provider";
 import ReadingComposer from "./components/reading/reading_composer.view";
 
 function ExerciseComposerView() {
@@ -20,7 +21,11 @@ function ExerciseComposerView() {
 
   switch (searchParams.get("type")) {
     case "reading":
-      return <ReadingComposer />;
+      return (
+        <ReadingComposerProvider>
+          <ReadingComposer />
+        </ReadingComposerProvider>
+      );
     case "listening":
       return <>Listening</>;
     case "writing":

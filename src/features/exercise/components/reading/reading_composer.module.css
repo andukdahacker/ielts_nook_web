@@ -4,6 +4,7 @@
     }
     border-radius: var(--mantine-radius-sm);
     padding: var(--mantine-spacing-xs);
+    cursor: grab;
 }
 
 .header {
@@ -16,4 +17,10 @@
     border-right: 1px;
     border-right-color: var(--mantine-color-default-border);
     border-right-style: solid;
+}
+
+.composerFooter {
+    border-top: 1px;
+    border-top-color: var(--mantine-color-default-border);
+    border-top-style: solid;
 }

@@ -2,6 +2,7 @@ import { Center, Loader } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import { FC, ReactNode, useEffect } from "react";
 import { useNavigate } from "react-router";
+import { UnauthorizedError } from "../../core/client";
 import AuthContext from "./auth.context";
 import useMe from "./hooks/use_me.hook";
 
@@ -12,9 +13,13 @@ const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
 
   useEffect(() => {
     if (error) {
-      localStorage.removeItem("token");
-      notifications.show({ message: error.message, color: "red" });
-      navigate("/signIn");
+      if (error instanceof UnauthorizedError) {
+        localStorage.removeItem("token");
+        notifications.show({ message: error.message, color: "red" });
+        navigate("/signIn");
+      } else {
+        notifications.show({ message: error.message, color: "red" });
+      }
     }
   }, [error, navigate]);
 

@@ -7,9 +7,14 @@ export type Class = components["schemas"]["Class"];
 export type Exercise = components["schemas"]["Exercise"];
 
 export type ReadingExercise = components["schemas"]["ReadingExercise"];
-export type ReadingExerciseType = components["schemas"]["ReadingExerciseType"];
+export type ReadingExerciseType = ReadingExercise["tasks"][0]["type"];
+export type ReadingExerciseQuestion = ReadingExercise["tasks"][0]["questions"];
+
 export type ReadingMultipleChoiceTask =
   components["schemas"]["ReadingMultipleChoiceTask"];
+export type ReadingTFNGTask = components["schemas"]["ReadingTFNGTaskSchema"];
+
+export type ReadingTask = ReadingMultipleChoiceTask | ReadingTFNGTask;
 
 export type RegisterCenterInput = components["schemas"]["RegisterCenterInput"];
 export type GetCenterClassListInput =

@@ -1,0 +1,6 @@
+.container {
+    border: 1px;
+    border-style: dashed;
+    border-color: var(--mantine-color-default-border);
+    border-radius: var(--mantine-radius-xs);
+}

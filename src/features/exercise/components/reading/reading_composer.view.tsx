@@ -7,15 +7,43 @@ import {
   ScrollArea,
   Stack,
   Text,
+  TextInput,
 } from "@mantine/core";
-import { Link, RichTextEditor } from "@mantine/tiptap";
+import { Link } from "@mantine/tiptap";
 import { IconGripVertical } from "@tabler/icons-react";
 import TextAlign from "@tiptap/extension-text-align";
 import { useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
+import { useContext, useState } from "react";
+import EditorInput from "../../../../common/components/editor/editor";
+import {
+  ReadingExerciseType,
+  ReadingMultipleChoiceTask,
+} from "../../../../schema/types";
+import { ReadingComposerContext } from "./reading_composer.context";
 import classes from "./reading_composer.module.css";
+import ReadingMultipleChoice from "./reading_multiple_choice.view";
+import ReadingTaskPlaceholder from "./reading_task_placeholder.view";
+
+type ReadingTaskTag = {
+  type: ReadingExerciseType;
+  label: string;
+};
+
+const ReadingTaskTags: ReadingTaskTag[] = [
+  {
+    type: "Multiple choice",
+    label: "Multiple choice",
+  },
+  {
+    type: "True/False/Not Given",
+    label: "True/False/Not Given",
+  },
+];
 
 function ReadingComposer() {
+  const { content, tasks } = useContext(ReadingComposerContext);
+
   const editor = useEditor({
     extensions: [
       StarterKit,
@@ -24,69 +52,81 @@ function ReadingComposer() {
         types: ["heading", "paragraph"],
       }),
     ],
-    content: "",
+    content,
   });
 
+  const [isDragging, setIsDragging] = useState(false);
+
   return (
-    <Stack mah={"100vh"}>
+    <Stack>
       <Paper withBorder m={"1rem"}>
         <Flex direction={"column"}>
           <Group p={"xs"} h={"48px"} className={classes.header}>
             Header
           </Group>
-          <Flex direction={"row"} h={"calc(100vh - 2rem - 48px)"}>
+          <Flex
+            direction={"row"}
+            h={"calc(100vh - 2rem - 48px - 65px - 0.625rem)"}
+          >
             <ScrollArea flex={1} className={classes.tagList}>
               <Stack p={"xs"}>
-                <Group className={classes.exerciseTag} justify="space-between">
-                  <Text>Multiple choice</Text>
-                  <Center>
-                    <IconGripVertical />
-                  </Center>
-                </Group>
-                <Group className={classes.exerciseTag} justify="space-between">
-                  <Text>Multiple choice</Text>
-                  <Center>
-                    <IconGripVertical />
-                  </Center>
-                </Group>
+                {ReadingTaskTags.map((e) => (
+                  <Group
+                    key={e.type}
+                    className={classes.exerciseTag}
+                    justify="space-between"
+                    draggable
+                    id={e.type}
+                    onDragStart={(event) => {
+                      event.dataTransfer.setData("text/plain", e.type);
+                      event.dataTransfer.effectAllowed = "copyMove";
+                      setIsDragging(true);
+                    }}
+                    onDragEnd={() => {
+                      setIsDragging(false);
+                    }}
+                  >
+                    <Text size="xs">{e.label}</Text>
+                    <Center>
+                      <IconGripVertical size={16} />
+                    </Center>
+                  </Group>
+                ))}
               </Stack>
             </ScrollArea>
-            <Flex flex={4} bg={"red"} direction={"column"}>
+            <Flex flex={4} direction={"column"}>
               <ScrollArea w={"100%"} h={"calc(100% - 48px)"}>
                 <Stack p={"lg"}>
-                  <RichTextEditor editor={editor} variant="subtle">
-                    <RichTextEditor.Toolbar>
-                      <RichTextEditor.ControlsGroup>
-                        <RichTextEditor.Bold />
-                        <RichTextEditor.Italic />
-                        <RichTextEditor.Blockquote />
-                      </RichTextEditor.ControlsGroup>
+                  <TextInput label={"Title"} />
+                  <EditorInput editor={editor} label="Content" />
+                  <Stack>
+                    {tasks.map((e, index) => {
+                      switch (e.type) {
+                        case "Multiple choice":
+                          return (
+                            <ReadingMultipleChoice
+                              task={e as ReadingMultipleChoiceTask}
+                              index={index}
+                              key={index}
+                            />
+                          );
+                        default:
+                          return <Text key={index}>{e.type}</Text>;
+                      }
+                    })}
+                  </Stack>
 
-                      <RichTextEditor.ControlsGroup>
-                        <RichTextEditor.H1 />
-                        <RichTextEditor.H2 />
-                        <RichTextEditor.H3 />
-                        <RichTextEditor.H4 />
-                      </RichTextEditor.ControlsGroup>
-
-                      <RichTextEditor.ControlsGroup>
-                        <RichTextEditor.AlignLeft />
-                        <RichTextEditor.AlignCenter />
-                        <RichTextEditor.AlignJustify />
-                        <RichTextEditor.AlignRight />
-                      </RichTextEditor.ControlsGroup>
-
-                      <RichTextEditor.ControlsGroup>
-                        <RichTextEditor.Undo />
-                        <RichTextEditor.Redo />
-                      </RichTextEditor.ControlsGroup>
-                    </RichTextEditor.Toolbar>
-                    <RichTextEditor.Content />
-                  </RichTextEditor>
+                  <ReadingTaskPlaceholder isDragging={isDragging} />
                 </Stack>
               </ScrollArea>
-              <Group h={"48px"} bg={"blue"}>
-                <Button>Save changes</Button>
+              <Group
+                h={"48px"}
+                className={classes.composerFooter}
+                justify="end"
+                align="center"
+                p={"xs"}
+              >
+                <Button size="xs">Save changes</Button>
               </Group>
             </Flex>
           </Flex>
