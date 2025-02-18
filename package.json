@@ -11,6 +11,7 @@
     "sync-schema-dev": "npx openapi-typescript http://localhost:3000/documentation/json -o ./src/schema/schema.d.ts"
   },
   "dependencies": {
+    "@hello-pangea/dnd": "^18.0.1",
     "@mantine/core": "^7.16.2",
     "@mantine/dropzone": "^7.16.2",
     "@mantine/form": "^7.16.2",

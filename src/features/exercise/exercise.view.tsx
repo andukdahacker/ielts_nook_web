@@ -12,7 +12,6 @@ import {
   Text,
   TextInput,
 } from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
 import {
   IconBook,
   IconDotsVertical,
@@ -35,7 +34,6 @@ import useGetExerciseList from "./hooks/use_get_exercise_list";
 function ExerciseView() {
   const [searchString, setSearchString] = useState("");
   const debouncedSearchString = useDebounce(searchString, 500);
-  const [opened, { close, open }] = useDisclosure(false);
 
   const {
     data,

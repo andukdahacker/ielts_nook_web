@@ -22,3 +22,4 @@ export type GetCenterClassListInput =
 export type UpdateClassInput = components["schemas"]["UpdateClassInput"];
 export type GetExerciseListInput =
   components["schemas"]["GetExerciseListInput"];
+export type CreateExerciseInput = components["schemas"]["CreateExerciseInput"];

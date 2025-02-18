@@ -1455,6 +1455,12 @@ export interface components {
             isPublic: boolean;
             searchString?: string;
         };
+        /** CreateExerciseInput */
+        CreateExerciseInput: {
+            name: string;
+            content: unknown;
+            type: "READING" | "LISTENING" | "WRITING" | "SPEAKING";
+        };
     };
     responses: never;
     parameters: never;

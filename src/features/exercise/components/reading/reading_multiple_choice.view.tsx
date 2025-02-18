@@ -1,16 +1,18 @@
+import { DragDropContext, Draggable, Droppable } from "@hello-pangea/dnd";
 import {
   ActionIcon,
-  Box,
   Button,
+  Center,
   Group,
+  Radio,
   Stack,
   Text,
   TextInput,
 } from "@mantine/core";
-import { IconGripVertical, IconTrash } from "@tabler/icons-react";
+import { IconGripVertical, IconPlus, IconTrash } from "@tabler/icons-react";
 import Link from "@tiptap/extension-link";
 import TextAlign from "@tiptap/extension-text-align";
-import { useEditor } from "@tiptap/react";
+import { JSONContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { useContext } from "react";
 import EditorInput from "../../../../common/components/editor/editor";
@@ -24,6 +26,15 @@ interface ReadingMultipleChoiceProps {
 }
 
 function ReadingMultipleChoice({ task, index }: ReadingMultipleChoiceProps) {
+  const { removeTask, editTask } = useContext(ReadingComposerContext);
+
+  const editInstruction = (value: JSONContent) => {
+    editTask<ReadingMultipleChoiceTask>(index, {
+      ...task,
+      instructions: value,
+    });
+  };
+
   const editor = useEditor({
     extensions: [
       StarterKit,
@@ -32,10 +43,12 @@ function ReadingMultipleChoice({ task, index }: ReadingMultipleChoiceProps) {
         types: ["heading", "paragraph"],
       }),
     ],
-    content: "Choose the appropriate letters A, B, C or D",
+    content:
+      task.instructions != undefined ? (task.instructions as JSONContent) : "",
+    onUpdate: ({ editor }) => {
+      editInstruction(editor.getJSON());
+    },
   });
-
-  const { removeTask, editTask } = useContext(ReadingComposerContext);
 
   const addQuestion = () => {
     const order = task.questions.length + 1;
@@ -45,21 +58,176 @@ function ReadingMultipleChoice({ task, index }: ReadingMultipleChoiceProps) {
         ...task.questions,
         {
           order,
-          options: [
-            { order: 1, value: "A", content: "Option A" },
-            { order: 2, value: "B", content: "Option B" },
-            { order: 3, value: "C", content: "Option C" },
-            { order: 4, value: "D", content: "Option D" },
-          ],
+          options: [],
           content: `Question ${order}`,
-          correctAnswer: "A",
+          correctAnswer: "Option A",
         },
       ],
     });
   };
 
+  const editQuestionContent = (questionIndex: number, content: string) => {
+    const newQuestions = [...task.questions];
+
+    newQuestions[questionIndex].content = content;
+
+    editTask<ReadingMultipleChoiceTask>(index, {
+      ...task,
+      questions: newQuestions,
+    });
+  };
+
+  const removeQuestion = (questionIndex: number) => {
+    const newQuestions = [...task.questions];
+
+    newQuestions.splice(questionIndex, 1);
+
+    const remappedOrder: typeof newQuestions = newQuestions.map((e, i) => {
+      return {
+        ...e,
+        order: i + 1,
+      };
+    });
+
+    editTask<ReadingMultipleChoiceTask>(index, {
+      ...task,
+      questions: remappedOrder,
+    });
+  };
+
+  const onDragEndQuestion = (sourceIndex: number, destinationIndex: number) => {
+    const newQuestions = [...task.questions];
+
+    const temp = newQuestions[destinationIndex];
+
+    newQuestions[destinationIndex] = newQuestions[sourceIndex];
+    newQuestions[sourceIndex] = temp;
+
+    const remappedOrder: typeof newQuestions = newQuestions.map((e, i) => {
+      return {
+        ...e,
+        order: i + 1,
+      };
+    });
+
+    editTask<ReadingMultipleChoiceTask>(index, {
+      ...task,
+      questions: remappedOrder,
+    });
+  };
+
+  const addOption = (questionIndex: number) => {
+    const newQuestions = [...task.questions];
+
+    const newOptions = [...newQuestions[questionIndex].options];
+
+    newOptions.push({
+      order: newOptions.length + 1,
+      value: "",
+      content: "",
+    });
+
+    newQuestions[questionIndex].options = newOptions;
+
+    editTask<ReadingMultipleChoiceTask>(index, {
+      ...task,
+      questions: newQuestions,
+    });
+  };
+
+  const editOptionContent = (
+    questionIndex: number,
+    optionIndex: number,
+    content: string,
+  ) => {
+    const newQuestions = [...task.questions];
+
+    const newOptions = [...newQuestions[questionIndex].options];
+
+    newOptions[optionIndex].content = content;
+    newOptions[optionIndex].value = content;
+
+    newQuestions[questionIndex].options = newOptions;
+
+    editTask<ReadingMultipleChoiceTask>(index, {
+      ...task,
+      questions: newQuestions,
+    });
+  };
+
+  const markOptionCorrect = (questionIndex: number, value: string) => {
+    const newQuestions = [...task.questions];
+
+    newQuestions[questionIndex].correctAnswer = value;
+    console.log(newQuestions);
+
+    editTask<ReadingMultipleChoiceTask>(index, {
+      ...task,
+      questions: newQuestions,
+    });
+  };
+
+  const removeOption = (questionIndex: number, optionIndex: number) => {
+    const newQuestions = [...task.questions];
+
+    const options = [...newQuestions[questionIndex].options];
+
+    const isCorrectAnswer =
+      options[optionIndex].value == newQuestions[questionIndex].correctAnswer;
+
+    options.splice(optionIndex, 1);
+
+    const remappedOrder: typeof options = options.map((e, i) => {
+      return {
+        ...e,
+        order: i + 1,
+      };
+    });
+
+    newQuestions[questionIndex].options = remappedOrder;
+
+    if (isCorrectAnswer) {
+      newQuestions[questionIndex].correctAnswer = "";
+    }
+
+    editTask<ReadingMultipleChoiceTask>(index, {
+      ...task,
+      questions: newQuestions,
+    });
+  };
+
+  const onDragEndOption = (
+    questionIndex: number,
+    sourceIndex: number,
+    destinationIndex: number,
+  ) => {
+    const newQuestions = [...task.questions];
+
+    const options = [...newQuestions[questionIndex].options];
+
+    const temp = options[destinationIndex];
+
+    options[destinationIndex] = options[sourceIndex];
+
+    options[sourceIndex] = temp;
+
+    const remappedOrder: typeof options = options.map((e, i) => {
+      return {
+        ...e,
+        order: i + 1,
+      };
+    });
+
+    newQuestions[questionIndex].options = remappedOrder;
+
+    editTask<ReadingMultipleChoiceTask>(index, {
+      ...task,
+      questions: newQuestions,
+    });
+  };
+
   return (
-    <Stack className={classes.container} p={"xs"} draggable>
+    <Stack className={classes.container} p={"xs"}>
       <Group justify="space-between">
         <Text>Type: Multiple Choice</Text>
         <Group>
@@ -75,32 +243,173 @@ function ReadingMultipleChoice({ task, index }: ReadingMultipleChoiceProps) {
       </Group>
       <EditorInput editor={editor} label="Instructions" />
       <Stack>
-        {task.questions.map((question, index) => (
-          <Box key={index}>
-            <Group justify="start" align="start">
-              <Text>{index + 1}. </Text>
-              <TextInput label="Question" withAsterisk />
-              <TextInput label="Correct answer" withAsterisk />
-            </Group>
-            <Stack>
-              {question.options.map((option, index) => (
-                <Group
-                  key={index}
-                  ml={"lg"}
-                  mt={"lg"}
-                  justify="start"
-                  align="start"
-                >
-                  <Text>{option.value}. </Text>
-                  <TextInput label="Option" withAsterisk />
-                </Group>
-              ))}
-            </Stack>
-          </Box>
-        ))}
+        <DragDropContext
+          onDragEnd={(result) => {
+            console.log("result", result);
+            const source = result.source.index;
+            const destination = result.destination?.index;
+
+            if (destination != undefined) {
+              onDragEndQuestion(source, destination);
+            }
+          }}
+        >
+          <Droppable droppableId={`task${index}question`}>
+            {(provided) => (
+              <Stack {...provided.droppableProps} ref={provided.innerRef}>
+                {task.questions.map((question, questionIndex) => (
+                  <Draggable
+                    key={question.order}
+                    index={questionIndex}
+                    draggableId={`${question.order}`}
+                  >
+                    {(provided) => (
+                      <Stack
+                        key={questionIndex}
+                        ref={provided.innerRef}
+                        {...provided.draggableProps}
+                        {...provided.dragHandleProps}
+                      >
+                        <Group align="center">
+                          <Center>
+                            <Text>{questionIndex + 1}. </Text>
+                          </Center>
+                          <TextInput
+                            flex={1}
+                            value={question.content}
+                            onChange={(event) => {
+                              editQuestionContent(
+                                questionIndex,
+                                event.target.value,
+                              );
+                            }}
+                          />
+
+                          <ActionIcon
+                            color="red"
+                            onClick={() => removeQuestion(questionIndex)}
+                          >
+                            <IconTrash />
+                          </ActionIcon>
+                          <IconGripVertical />
+                        </Group>
+                        <Stack ml={"xl"} justify="center">
+                          <DragDropContext
+                            onDragEnd={(result) => {
+                              const source = result.source.index;
+                              const destination = result.destination?.index;
+
+                              if (destination != undefined) {
+                                onDragEndOption(
+                                  questionIndex,
+                                  source,
+                                  destination,
+                                );
+                              }
+                            }}
+                          >
+                            <Droppable
+                              droppableId={`question${questionIndex}option`}
+                            >
+                              {(provided) => (
+                                <div
+                                  {...provided.droppableProps}
+                                  ref={provided.innerRef}
+                                >
+                                  {question.options.map(
+                                    (option, optionIndex) => (
+                                      <Draggable
+                                        key={option.order}
+                                        draggableId={`${option.order}`}
+                                        index={optionIndex}
+                                      >
+                                        {(provided) => (
+                                          <Group
+                                            key={optionIndex}
+                                            mt={"lg"}
+                                            justify="start"
+                                            align="center"
+                                            ref={provided.innerRef}
+                                            {...provided.draggableProps}
+                                            {...provided.dragHandleProps}
+                                          >
+                                            <TextInput
+                                              flex={1}
+                                              value={option.content}
+                                              onChange={(event) =>
+                                                editOptionContent(
+                                                  questionIndex,
+                                                  optionIndex,
+                                                  event.target.value,
+                                                )
+                                              }
+                                            />
+                                            <Radio
+                                              checked={
+                                                option.content ==
+                                                  question.correctAnswer &&
+                                                option.content != ""
+                                              }
+                                              onChange={(event) => {
+                                                if (event.target.checked) {
+                                                  markOptionCorrect(
+                                                    questionIndex,
+                                                    option.value,
+                                                  );
+                                                }
+                                              }}
+                                              label={"Correct answer"}
+                                            />
+                                            <ActionIcon
+                                              color="red"
+                                              onClick={() =>
+                                                removeOption(
+                                                  questionIndex,
+                                                  optionIndex,
+                                                )
+                                              }
+                                            >
+                                              <IconTrash />
+                                            </ActionIcon>
+                                            <IconGripVertical />
+                                          </Group>
+                                        )}
+                                      </Draggable>
+                                    ),
+                                  )}
+                                  {provided.placeholder}
+                                </div>
+                              )}
+                            </Droppable>
+                          </DragDropContext>
+
+                          <Group>
+                            <Button
+                              onClick={() => {
+                                addOption(questionIndex);
+                              }}
+                              leftSection={<IconPlus />}
+                            >
+                              Add option
+                            </Button>
+                          </Group>
+                        </Stack>
+                      </Stack>
+                    )}
+                  </Draggable>
+                ))}
+                {provided.placeholder}
+              </Stack>
+            )}
+          </Droppable>
+        </DragDropContext>
       </Stack>
 
-      <Button onClick={() => addQuestion()}>Add question</Button>
+      <Group>
+        <Button onClick={() => addQuestion()} leftSection={<IconPlus />}>
+          Add question
+        </Button>
+      </Group>
     </Stack>
   );
 }

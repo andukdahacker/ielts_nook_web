@@ -1,3 +1,4 @@
+import { Content } from "@tiptap/react";
 import { PropsWithChildren, useState } from "react";
 import {
   ReadingExercise,
@@ -10,6 +11,12 @@ import { ReadingComposerContext } from "./reading_composer.context";
 
 function ReadingComposerProvider({ children }: PropsWithChildren) {
   const [tasks, setTasks] = useState<ReadingExercise["tasks"]>([]);
+
+  const [content, setContent] = useState<Content>("");
+
+  const [title, setTitle] = useState("");
+
+  const [name, setName] = useState("Untitled exercise");
 
   const addTask = (type: ReadingExerciseType) => {
     switch (type) {
@@ -44,7 +51,14 @@ function ReadingComposerProvider({ children }: PropsWithChildren) {
       const newArray = [...tasks];
       newArray.splice(index, 1);
 
-      return newArray;
+      const remappedOrder: typeof newArray = newArray.map((e, i) => {
+        return {
+          ...e,
+          order: i + 1,
+        };
+      });
+
+      return remappedOrder;
     });
   };
 
@@ -53,14 +67,30 @@ function ReadingComposerProvider({ children }: PropsWithChildren) {
       const newArray = [...tasks];
 
       newArray[index] = task;
-
-      return newArray;
+      const remappedOrder: typeof newArray = newArray.map((e, i) => {
+        return {
+          ...e,
+          order: i + 1,
+        };
+      });
+      return remappedOrder;
     });
   }
 
   return (
     <ReadingComposerContext.Provider
-      value={{ content: "", tasks, addTask, removeTask, editTask }}
+      value={{
+        name,
+        setName,
+        content,
+        setContent,
+        title,
+        setTitle,
+        tasks,
+        addTask,
+        removeTask,
+        editTask,
+      }}
     >
       {children}
     </ReadingComposerContext.Provider>
