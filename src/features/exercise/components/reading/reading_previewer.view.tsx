@@ -53,7 +53,9 @@ function ReadingPreviewerView({
                   return (
                     <Stack key={`task-${task.type}-${task.order}`}>
                       {task.questions.map((question) => (
-                        <Stack key={`question-${question.order}`}>
+                        <Stack
+                          key={`task-${task.type}-question${question.order}`}
+                        >
                           <Group>
                             <Text>{question.order}</Text>
                             <Text>{question.content}</Text>
@@ -63,7 +65,9 @@ function ReadingPreviewerView({
                             <Stack>
                               {question.options.map((option) => {
                                 return (
-                                  <Group key={option.value}>
+                                  <Group
+                                    key={`task-${task.type}-question${question.order}-option${option.order}`}
+                                  >
                                     <Radio
                                       label={option.content}
                                       value={option.value}
