@@ -1,6 +1,7 @@
 import { Content } from "@tiptap/react";
 import { PropsWithChildren, useState } from "react";
 import {
+  Exercise,
   ReadingExercise,
   ReadingExerciseType,
   ReadingMultipleChoiceTask,
@@ -9,14 +10,27 @@ import {
 } from "../../../../schema/types";
 import { ReadingComposerContext } from "./reading_composer.context";
 
-function ReadingComposerProvider({ children }: PropsWithChildren) {
-  const [tasks, setTasks] = useState<ReadingExercise["tasks"]>([]);
+interface ReadingComposerProviderProps {
+  exercise?: Exercise;
+  readingExercise?: ReadingExercise;
+}
 
-  const [content, setContent] = useState<Content>("");
+function ReadingComposerProvider({
+  children,
+  readingExercise,
+  exercise,
+}: PropsWithChildren<ReadingComposerProviderProps>) {
+  const [tasks, setTasks] = useState<ReadingExercise["tasks"]>(
+    readingExercise?.tasks ?? [],
+  );
 
-  const [title, setTitle] = useState("");
+  const [content, setContent] = useState<Content>(
+    readingExercise?.content ?? "",
+  );
 
-  const [name, setName] = useState("Untitled exercise");
+  const [title, setTitle] = useState(readingExercise?.title ?? "");
+
+  const [name, setName] = useState(exercise?.name ?? "");
 
   const addTask = (type: ReadingExerciseType) => {
     switch (type) {

@@ -8,13 +8,16 @@ export type Exercise = components["schemas"]["Exercise"];
 
 export type ReadingExercise = components["schemas"]["ReadingExercise"];
 export type ReadingExerciseType = ReadingExercise["tasks"][0]["type"];
-export type ReadingExerciseQuestion = ReadingExercise["tasks"][0]["questions"];
-
 export type ReadingMultipleChoiceTask =
   components["schemas"]["ReadingMultipleChoiceTask"];
 export type ReadingTFNGTask = components["schemas"]["ReadingTFNGTaskSchema"];
-
 export type ReadingTask = ReadingMultipleChoiceTask | ReadingTFNGTask;
+
+export type ListeningExercise = components["schemas"]["ListeningExercise"];
+export type ListeningExerciseType = ListeningExercise["tasks"][0]["type"];
+export type ListeningMultipleChoiceTask =
+  components["schemas"]["ListeningMultipleChoiceTask"];
+export type ListeningTask = ListeningMultipleChoiceTask;
 
 export type RegisterCenterInput = components["schemas"]["RegisterCenterInput"];
 export type GetCenterClassListInput =
@@ -23,3 +26,4 @@ export type UpdateClassInput = components["schemas"]["UpdateClassInput"];
 export type GetExerciseListInput =
   components["schemas"]["GetExerciseListInput"];
 export type CreateExerciseInput = components["schemas"]["CreateExerciseInput"];
+export type UpdateExerciseInput = components["schemas"]["UpdateExerciseInput"];

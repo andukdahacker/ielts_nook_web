@@ -13,6 +13,8 @@ import {
   IconWriting,
 } from "@tabler/icons-react";
 import { useSearchParams } from "react-router";
+import ListeningComposerProvider from "./components/listening/listening_composer.provider";
+import ListeningComposer from "./components/listening/listening_composer.view";
 import ReadingComposerProvider from "./components/reading/reading_composer.provider";
 import ReadingComposer from "./components/reading/reading_composer.view";
 
@@ -27,7 +29,11 @@ function ExerciseComposerView() {
         </ReadingComposerProvider>
       );
     case "listening":
-      return <>Listening</>;
+      return (
+        <ListeningComposerProvider>
+          <ListeningComposer />
+        </ListeningComposerProvider>
+      );
     case "writing":
       return <>Writing</>;
     case "speaking":

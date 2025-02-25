@@ -12,6 +12,7 @@ import ClassDetailView from "./features/class/class_detail.view";
 import ExerciseView from "./features/exercise/exercise.view";
 import ExerciseComposerView from "./features/exercise/exercise_composer.view";
 import ExerciseDetailView from "./features/exercise/exercise_detail.view";
+import ExerciseEditView from "./features/exercise/exercise_edit.view";
 import HomeLayout from "./features/home/home.layout";
 import HomeView from "./features/home/home.view";
 import EditUserModal from "./features/users/edit_user.modal";
@@ -52,6 +53,10 @@ function App() {
                 <Route path="/class/:id" element={<ClassDetailView />} />
                 <Route path="/exercise" element={<ExerciseView />} />
                 <Route path="/exercise/:id" element={<ExerciseDetailView />} />
+                <Route
+                  path="/exercise/:id/edit"
+                  element={<ExerciseEditView />}
+                />
                 <Route
                   path="/exercise/composer"
                   element={<ExerciseComposerView />}

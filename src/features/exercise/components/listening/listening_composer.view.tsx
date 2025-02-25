@@ -10,31 +10,30 @@ import {
   Text,
   TextInput,
 } from "@mantine/core";
+import { Dropzone } from "@mantine/dropzone";
 import { useDisclosure } from "@mantine/hooks";
-import { Link } from "@mantine/tiptap";
-import { IconGripVertical } from "@tabler/icons-react";
-import TextAlign from "@tiptap/extension-text-align";
-import { useEditor } from "@tiptap/react";
-import StarterKit from "@tiptap/starter-kit";
-import { useContext, useState } from "react";
-import EditorInput from "../../../../common/components/editor/editor";
 import {
-  ReadingExerciseType,
-  ReadingMultipleChoiceTask,
+  IconGripVertical,
+  IconHeadphones,
+  IconUpload,
+  IconX,
+} from "@tabler/icons-react";
+import { useContext, useState } from "react";
+import {
+  ListeningExerciseType,
+  ListeningMultipleChoiceTask,
 } from "../../../../schema/types";
-import useCreateExercise from "../../hooks/use_create_exercise";
 import TaskPlaceholder from "../common/task_placeholder.view";
-import { ReadingComposerContext } from "./reading_composer.context";
-import classes from "./reading_composer.module.css";
-import ReadingMultipleChoice from "./reading_multiple_choice.view";
-import ReadingPreviewerView from "./reading_previewer.view";
+import ListeningComposerContext from "./listening_composer.context";
+import classes from "./listening_composer.module.css";
+import ListeningMultipleChoice from "./listening_multiple_choice.view";
 
-type ReadingTaskTag = {
-  type: ReadingExerciseType;
+type ListeningTaskTag = {
+  type: ListeningExerciseType;
   label: string;
 };
 
-const ReadingTaskTags: ReadingTaskTag[] = [
+const ListeningTaskTags: ListeningTaskTag[] = [
   {
     type: "Multiple choice",
     label: "Multiple choice",
@@ -45,36 +44,12 @@ const ReadingTaskTags: ReadingTaskTag[] = [
   },
 ];
 
-function ReadingComposer() {
-  const {
-    name,
-    setName,
-    content,
-    title,
-    setTitle,
-    tasks,
-    setContent,
-    addTask,
-  } = useContext(ReadingComposerContext);
-
-  const editor = useEditor({
-    extensions: [
-      StarterKit,
-      Link,
-      TextAlign.configure({
-        types: ["heading", "paragraph"],
-      }),
-    ],
-    content,
-    onUpdate: ({ editor }) => {
-      setContent(editor.getJSON());
-    },
-  });
+function ListeningComposer() {
+  const { name, setName, tasks, addTask } = useContext(
+    ListeningComposerContext,
+  );
 
   const [isDragging, setIsDragging] = useState(false);
-
-  const { status: createExerciseStatus, mutate: createExercise } =
-    useCreateExercise();
 
   const [opened, { open, close }] = useDisclosure();
 
@@ -107,7 +82,7 @@ function ReadingComposer() {
             >
               <ScrollArea flex={1} className={classes.tagList}>
                 <Stack p={"xs"}>
-                  {ReadingTaskTags.map((e) => (
+                  {ListeningTaskTags.map((e) => (
                     <Group
                       key={e.type}
                       className={classes.exerciseTag}
@@ -134,21 +109,53 @@ function ReadingComposer() {
               <Flex flex={4} direction={"column"}>
                 <ScrollArea w={"100%"} h={"calc(100% - 48px)"}>
                   <Stack p={"lg"}>
-                    <TextInput
-                      label={"Title"}
-                      value={title}
-                      onChange={(event) => {
-                        setTitle(event.target.value);
-                      }}
-                    />
-                    <EditorInput editor={editor} label="Content" />
+                    <Dropzone onDrop={(files) => {}} accept={["audio/*"]}>
+                      <Group
+                        justify="center"
+                        gap="xl"
+                        mih={220}
+                        style={{ pointerEvents: "none" }}
+                      >
+                        <Dropzone.Accept>
+                          <IconUpload
+                            size={52}
+                            color="var(--mantine-color-blue-6)"
+                            stroke={1.5}
+                          />
+                        </Dropzone.Accept>
+                        <Dropzone.Reject>
+                          <IconX
+                            size={52}
+                            color="var(--mantine-color-red-6)"
+                            stroke={1.5}
+                          />
+                        </Dropzone.Reject>
+                        <Dropzone.Idle>
+                          <IconHeadphones
+                            size={52}
+                            color="var(--mantine-color-dimmed)"
+                            stroke={1.5}
+                          />
+                        </Dropzone.Idle>
+
+                        <div>
+                          <Text size="xl" inline>
+                            Drag images here or click to select files
+                          </Text>
+                          <Text size="sm" c="dimmed" inline mt={7}>
+                            Attach as many files as you like, each file should
+                            not exceed 5mb
+                          </Text>
+                        </div>
+                      </Group>
+                    </Dropzone>
                     <Stack>
                       {tasks.map((e, index) => {
                         switch (e.type) {
                           case "Multiple choice":
                             return (
-                              <ReadingMultipleChoice
-                                task={e as ReadingMultipleChoiceTask}
+                              <ListeningMultipleChoice
+                                task={e as ListeningMultipleChoiceTask}
                                 index={index}
                                 key={index}
                               />
@@ -161,7 +168,7 @@ function ReadingComposer() {
 
                     <TaskPlaceholder
                       isDragging={isDragging}
-                      onDrop={(data: ReadingExerciseType) => addTask(data)}
+                      onDrop={(data: ListeningExerciseType) => addTask(data)}
                     />
                   </Stack>
                 </ScrollArea>
@@ -172,22 +179,7 @@ function ReadingComposer() {
                   align="center"
                   p={"xs"}
                 >
-                  <Button
-                    size="xs"
-                    onClick={() => {
-                      createExercise({
-                        type: "READING",
-                        name,
-                        content: {
-                          title,
-                          content,
-                          tasks,
-                        },
-                      });
-                    }}
-                    loading={createExerciseStatus == "pending"}
-                    disabled={createExerciseStatus == "pending"}
-                  >
+                  <Button size="xs" onClick={() => {}}>
                     Save changes
                   </Button>
                 </Group>
@@ -201,11 +193,9 @@ function ReadingComposer() {
         onClose={close}
         title={"Preview"}
         fullScreen={true}
-      >
-        <ReadingPreviewerView title={title} content={content} tasks={tasks} />
-      </Modal>
+      ></Modal>
     </>
   );
 }
 
-export default ReadingComposer;
+export default ListeningComposer;

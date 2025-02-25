@@ -17,12 +17,13 @@ import TextAlign from "@tiptap/extension-text-align";
 import { useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { useContext, useState } from "react";
+import { useParams } from "react-router";
 import EditorInput from "../../../../common/components/editor/editor";
 import {
   ReadingExerciseType,
   ReadingMultipleChoiceTask,
 } from "../../../../schema/types";
-import useCreateExercise from "../../hooks/use_create_exercise";
+import useUpdateExercise from "../../hooks/use_update_exercise";
 import TaskPlaceholder from "../common/task_placeholder.view";
 import { ReadingComposerContext } from "./reading_composer.context";
 import classes from "./reading_composer.module.css";
@@ -45,7 +46,7 @@ const ReadingTaskTags: ReadingTaskTag[] = [
   },
 ];
 
-function ReadingComposer() {
+function ReadingComposerEdit() {
   const {
     name,
     setName,
@@ -73,10 +74,11 @@ function ReadingComposer() {
 
   const [isDragging, setIsDragging] = useState(false);
 
-  const { status: createExerciseStatus, mutate: createExercise } =
-    useCreateExercise();
+  const { status, mutate } = useUpdateExercise();
 
   const [opened, { open, close }] = useDisclosure();
+
+  const { id } = useParams();
 
   return (
     <>
@@ -175,18 +177,18 @@ function ReadingComposer() {
                   <Button
                     size="xs"
                     onClick={() => {
-                      createExercise({
-                        type: "READING",
-                        name,
+                      mutate({
+                        id: id!,
                         content: {
                           title,
                           content,
                           tasks,
                         },
+                        name,
                       });
                     }}
-                    loading={createExerciseStatus == "pending"}
-                    disabled={createExerciseStatus == "pending"}
+                    loading={status == "pending"}
+                    disabled={status == "pending"}
                   >
                     Save changes
                   </Button>
@@ -208,4 +210,4 @@ function ReadingComposer() {
   );
 }
 
-export default ReadingComposer;
+export default ReadingComposerEdit;

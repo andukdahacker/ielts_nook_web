@@ -1,21 +1,21 @@
 import { notifications } from "@mantine/notifications";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router";
-import createExercise from "../network/create_exercise";
+import updateExercise from "../network/update_exercise";
 
-function useCreateExercise() {
+function useUpdateExercise() {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const mutation = useMutation({
-    mutationFn: createExercise,
+    mutationFn: updateExercise,
     onSuccess: () => {
-      notifications.show({ message: "Created exercise successfully" });
-      queryClient.invalidateQueries({ queryKey: ["exercise"] });
+      notifications.show({ message: "Updated exercise successfully" });
+      queryClient.invalidateQueries({queryKey: ["exercise"]})
       navigate("/exercise");
     },
     onError: (error) => {
       notifications.show({
-        message: "Failed to create new exercise due to error: " + error.message,
+        message: "Failed to update exercise due to " + error,
         color: "red",
       });
     },
@@ -24,4 +24,4 @@ function useCreateExercise() {
   return mutation;
 }
 
-export default useCreateExercise;
+export default useUpdateExercise;

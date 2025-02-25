@@ -1,16 +1,13 @@
 import { Stack, Text } from "@mantine/core";
 import { IconNewSection } from "@tabler/icons-react";
-import { useContext } from "react";
-import { ReadingExerciseType } from "../../../../schema/types";
-import { ReadingComposerContext } from "./reading_composer.context";
-import classes from "./reading_task_placeholder.module.css";
+import classes from "./task_placeholder.module.css";
 
-interface ReadingTaskPlaceholderProps {
+interface TaskPlaceholderProps<T> {
   isDragging: boolean;
+  onDrop: (data: T) => void;
 }
 
-function ReadingTaskPlaceholder({ isDragging }: ReadingTaskPlaceholderProps) {
-  const { addTask } = useContext(ReadingComposerContext);
+function TaskPlaceholder<T>({ isDragging, onDrop }: TaskPlaceholderProps<T>) {
   return (
     <>
       <Stack
@@ -21,11 +18,9 @@ function ReadingTaskPlaceholder({ isDragging }: ReadingTaskPlaceholderProps) {
         id="dropzone"
         onDrop={(event) => {
           event.preventDefault();
-          const data = event.dataTransfer.getData(
-            "text/plain",
-          ) as ReadingExerciseType;
+          const data = event.dataTransfer.getData("text/plain") as T;
 
-          addTask(data);
+          onDrop(data);
         }}
         onDragEnter={(event) => {
           event.preventDefault();
@@ -45,4 +40,4 @@ function ReadingTaskPlaceholder({ isDragging }: ReadingTaskPlaceholderProps) {
   );
 }
 
-export default ReadingTaskPlaceholder;
+export default TaskPlaceholder;

@@ -959,7 +959,59 @@ export interface paths {
             cookie?: never;
         };
         get?: never;
-        put?: never;
+        /** @description Update an exercise */
+        put: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        id: string;
+                        name: string;
+                        content: unknown;
+                    };
+                };
+            };
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                id: string;
+                                name: string;
+                                type: "READING" | "LISTENING" | "WRITING" | "SPEAKING";
+                                content: unknown;
+                                /** @default null */
+                                centerId: string | null;
+                                createdAt: unknown;
+                                updatedAt: unknown;
+                            };
+                            message: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                            message: string;
+                        };
+                    };
+                };
+            };
+        };
         /** @description Create an exercise */
         post: {
             parameters: {
@@ -1287,76 +1339,6 @@ export interface components {
             addMembers?: string[];
             removeMembers?: string[];
         };
-        /** ReadingMultipleChoiceQuestionOption */
-        ReadingMultipleChoiceQuestionOption: {
-            content: string;
-            order: number;
-            value: string;
-        };
-        /** ReadingMultipleChoiceQuestion */
-        ReadingMultipleChoiceQuestion: {
-            content: string;
-            correctAnswer: string;
-            order: number;
-            options: {
-                content: string;
-                order: number;
-                value: string;
-            }[];
-        };
-        /** ReadingMultipleChoiceTask */
-        ReadingMultipleChoiceTask: {
-            order: number;
-            type: "Multiple choice" | "True/False/Not Given" | "Yes/No/Not Given" | "Summary Completion" | "Sentence Completion" | "Note Completion" | "Tabel Completion" | "Flowchart Completion" | "Matching heading to paragraph";
-            instructions: unknown;
-            questions: {
-                content: string;
-                correctAnswer: string;
-                order: number;
-                options: {
-                    content: string;
-                    order: number;
-                    value: string;
-                }[];
-            }[];
-        };
-        /** ReadingTFNGOptionSchema */
-        ReadingTFNGOptionSchema: "TRUE" | "FALSE" | "NOT GIVEN";
-        /** ReadingTFNGQuestionSchema */
-        ReadingTFNGQuestionSchema: {
-            order: number;
-            content: string;
-            correctAnswer: "TRUE" | "FALSE" | "NOT GIVEN";
-        };
-        /** ReadingTFNGTaskSchema */
-        ReadingTFNGTaskSchema: {
-            order: number;
-            type: "Multiple choice" | "True/False/Not Given" | "Yes/No/Not Given" | "Summary Completion" | "Sentence Completion" | "Note Completion" | "Tabel Completion" | "Flowchart Completion" | "Matching heading to paragraph";
-            instructions: unknown;
-            questions: {
-                order: number;
-                content: string;
-                correctAnswer: "TRUE" | "FALSE" | "NOT GIVEN";
-            }[];
-        };
-        /** ReadingYNNGOptionSchema */
-        ReadingYNNGOptionSchema: "YES" | "NO" | "NOT GIVEN";
-        /** ReadingYNNGQuestionSchema */
-        ReadingYNNGQuestionSchema: {
-            order: number;
-            content: string;
-            correctAnswer: "YES" | "NO" | "NOT GIVEN";
-        };
-        /** ReadingYNNGTaskSchema */
-        ReadingYNNGTaskSchema: {
-            order: number;
-            instructions: unknown;
-            questions: {
-                order: number;
-                content: string;
-                correctAnswer: "YES" | "NO" | "NOT GIVEN";
-            }[];
-        };
         /** ReadingExercise */
         ReadingExercise: {
             title: string;
@@ -1382,6 +1364,7 @@ export interface components {
                 questions: {
                     order: number;
                     content: string;
+                    /** ReadingTFNGOptionSchema */
                     correctAnswer: "TRUE" | "FALSE" | "NOT GIVEN";
                 }[];
             } | {
@@ -1401,6 +1384,60 @@ export interface components {
                 }[];
             })[];
         };
+        /** ReadingMultipleChoiceTask */
+        ReadingMultipleChoiceTask: {
+            order: number;
+            type: "Multiple choice" | "True/False/Not Given" | "Yes/No/Not Given" | "Summary Completion" | "Sentence Completion" | "Note Completion" | "Tabel Completion" | "Flowchart Completion" | "Matching heading to paragraph";
+            instructions: unknown;
+            questions: {
+                content: string;
+                correctAnswer: string;
+                order: number;
+                options: {
+                    content: string;
+                    order: number;
+                    value: string;
+                }[];
+            }[];
+        };
+        /** ReadingMultipleChoiceQuestion */
+        ReadingMultipleChoiceQuestion: {
+            content: string;
+            correctAnswer: string;
+            order: number;
+            options: {
+                content: string;
+                order: number;
+                value: string;
+            }[];
+        };
+        /** ReadingMultipleChoiceQuestionOption */
+        ReadingMultipleChoiceQuestionOption: {
+            content: string;
+            order: number;
+            value: string;
+        };
+        /** ReadingTFNGTaskSchema */
+        ReadingTFNGTaskSchema: {
+            order: number;
+            type: "Multiple choice" | "True/False/Not Given" | "Yes/No/Not Given" | "Summary Completion" | "Sentence Completion" | "Note Completion" | "Tabel Completion" | "Flowchart Completion" | "Matching heading to paragraph";
+            instructions: unknown;
+            questions: {
+                order: number;
+                content: string;
+                /** ReadingTFNGOptionSchema */
+                correctAnswer: "TRUE" | "FALSE" | "NOT GIVEN";
+            }[];
+        };
+        /** ReadingTFNGQuestionSchema */
+        ReadingTFNGQuestionSchema: {
+            order: number;
+            content: string;
+            /** ReadingTFNGOptionSchema */
+            correctAnswer: "TRUE" | "FALSE" | "NOT GIVEN";
+        };
+        /** ReadingTFNGOptionSchema */
+        ReadingTFNGOptionSchema: "TRUE" | "FALSE" | "NOT GIVEN";
         /** ReadingSummaryCompletionTask */
         ReadingSummaryCompletionTask: {
             order: number;
@@ -1434,6 +1471,58 @@ export interface components {
             value: string;
             content: string;
         };
+        /** ListeningExercise */
+        ListeningExercise: {
+            file: string;
+            tasks: {
+                order: number;
+                type: "Multiple choice" | "True/False/Not Given" | "Yes/No/Not Given" | "Summary Completion" | "Sentence Completion" | "Note Completion" | "Tabel Completion" | "Flowchart Completion" | "Matching heading to paragraph";
+                instructions: unknown;
+                questions: {
+                    content: string;
+                    correctAnswer: string;
+                    order: number;
+                    options: {
+                        content: string;
+                        order: number;
+                        value: string;
+                    }[];
+                }[];
+            }[];
+        };
+        /** ListeningMultipleChoiceTask */
+        ListeningMultipleChoiceTask: {
+            order: number;
+            type: "Multiple choice" | "True/False/Not Given" | "Yes/No/Not Given" | "Summary Completion" | "Sentence Completion" | "Note Completion" | "Tabel Completion" | "Flowchart Completion" | "Matching heading to paragraph";
+            instructions: unknown;
+            questions: {
+                content: string;
+                correctAnswer: string;
+                order: number;
+                options: {
+                    content: string;
+                    order: number;
+                    value: string;
+                }[];
+            }[];
+        };
+        /** ListeningMultipleChoiceQuestion */
+        ListeningMultipleChoiceQuestion: {
+            content: string;
+            correctAnswer: string;
+            order: number;
+            options: {
+                content: string;
+                order: number;
+                value: string;
+            }[];
+        };
+        /** ListeningMultipleChoiceQuestionOption */
+        ListeningMultipleChoiceQuestionOption: {
+            content: string;
+            order: number;
+            value: string;
+        };
         /** ExerciseType */
         ExerciseType: "READING" | "LISTENING" | "WRITING" | "SPEAKING";
         /** Exercise */
@@ -1460,6 +1549,12 @@ export interface components {
             name: string;
             content: unknown;
             type: "READING" | "LISTENING" | "WRITING" | "SPEAKING";
+        };
+        /** UpdateExerciseInput */
+        UpdateExerciseInput: {
+            id: string;
+            name: string;
+            content: unknown;
         };
     };
     responses: never;

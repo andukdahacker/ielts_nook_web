@@ -1,4 +1,13 @@
-import { Box, Center, Group, Radio, Stack, Text, Title } from "@mantine/core";
+import {
+  Box,
+  Center,
+  Group,
+  Radio,
+  ScrollArea,
+  Stack,
+  Text,
+  Title,
+} from "@mantine/core";
 import { Link } from "@mantine/tiptap";
 import TextAlign from "@tiptap/extension-text-align";
 import { Content, EditorContent, useEditor } from "@tiptap/react";
@@ -34,60 +43,66 @@ function ReadingPreviewerView({
   });
 
   return (
-    <Box h={"100vh"}>
+    <Box h={"calc(100vh - 6rem)"}>
       <Allotment>
         <Allotment.Pane>
-          <Stack>
-            <Center>
-              <Title order={3}>{title}</Title>
-            </Center>
-            <EditorContent editor={editor} />
-          </Stack>
+          <ScrollArea h={"calc(100vh - 6rem)"}>
+            <Stack>
+              <Center>
+                <Title order={3}>{title}</Title>
+              </Center>
+              <Center>
+                <EditorContent editor={editor} />
+              </Center>
+            </Stack>
+          </ScrollArea>
         </Allotment.Pane>
         <Allotment.Pane>
-          <Stack>
-            {tasks.map((e, i) => {
-              switch (e.type) {
-                case "Multiple choice": {
-                  const task = e as ReadingMultipleChoiceTask;
-                  return (
-                    <Stack key={`task-${task.type}-${task.order}`}>
-                      {task.questions.map((question) => (
-                        <Stack
-                          key={`task-${task.type}-question${question.order}`}
-                        >
-                          <Group>
-                            <Text>{question.order}</Text>
-                            <Text>{question.content}</Text>
-                          </Group>
+          <ScrollArea h={"calc(100vh - 6rem)"}>
+            <Stack p={"md"}>
+              {tasks.map((e) => {
+                switch (e.type) {
+                  case "Multiple choice": {
+                    const task = e as ReadingMultipleChoiceTask;
+                    return (
+                      <Stack key={`task-${task.type}-${task.order}`}>
+                        {task.questions.map((question) => (
+                          <Stack
+                            key={`task-${task.type}-question${question.order}`}
+                          >
+                            <Group>
+                              <Text>{question.order}</Text>
+                              <Text>{question.content}</Text>
+                            </Group>
 
-                          <Radio.Group>
-                            <Stack>
-                              {question.options.map((option) => {
-                                return (
-                                  <Group
-                                    key={`task-${task.type}-question${question.order}-option${option.order}`}
-                                  >
-                                    <Radio
-                                      label={option.content}
-                                      value={option.value}
-                                    />
-                                  </Group>
-                                );
-                              })}
-                            </Stack>
-                          </Radio.Group>
-                        </Stack>
-                      ))}
-                    </Stack>
-                  );
+                            <Radio.Group>
+                              <Stack>
+                                {question.options.map((option) => {
+                                  return (
+                                    <Group
+                                      key={`task-${task.type}-question${question.order}-option${option.order}`}
+                                    >
+                                      <Radio
+                                        label={option.content}
+                                        value={option.value}
+                                      />
+                                    </Group>
+                                  );
+                                })}
+                              </Stack>
+                            </Radio.Group>
+                          </Stack>
+                        ))}
+                      </Stack>
+                    );
+                  }
+                  default: {
+                    return <>Not yet</>;
+                  }
                 }
-                default: {
-                  return <>Not yet</>;
-                }
-              }
-            })}
-          </Stack>
+              })}
+            </Stack>
+          </ScrollArea>
         </Allotment.Pane>
       </Allotment>
     </Box>

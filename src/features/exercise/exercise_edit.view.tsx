@@ -1,8 +1,11 @@
 import { Center, Loader } from "@mantine/core";
 import { useParams } from "react-router";
+import { ReadingExercise } from "../../schema/types";
+import ReadingComposerEdit from "./components/reading/reading_compose_edit.view";
+import ReadingComposerProvider from "./components/reading/reading_composer.provider";
 import useGetExercise from "./hooks/use_get_exercise";
 
-function ExerciseDetailView() {
+function ExerciseEditView() {
   const { id } = useParams();
 
   const { data, status, error } = useGetExercise(id!);
@@ -18,9 +21,18 @@ function ExerciseDetailView() {
       return <Center>{error.message}</Center>;
     case "success": {
       const type = data.exercise.type;
+
       switch (type) {
         case "READING": {
-          return <></>;
+          const readingExercise = data.exercise.content as ReadingExercise;
+          return (
+            <ReadingComposerProvider
+              exercise={data.exercise}
+              readingExercise={readingExercise}
+            >
+              <ReadingComposerEdit />
+            </ReadingComposerProvider>
+          );
         }
         case "LISTENING":
         case "SPEAKING":
@@ -32,4 +44,4 @@ function ExerciseDetailView() {
   }
 }
 
-export default ExerciseDetailView;
+export default ExerciseEditView;

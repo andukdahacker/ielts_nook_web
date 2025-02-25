@@ -183,7 +183,12 @@ function ExerciseView() {
                               >
                                 View
                               </Menu.Item>
-                              <Menu.Item leftSection={<IconEdit size={14} />}>
+                              <Menu.Item
+                                leftSection={<IconEdit size={14} />}
+                                onClick={() => {
+                                  navigate(`/exercise/${e.id}/edit`);
+                                }}
+                              >
                                 Edit
                               </Menu.Item>
                               <Menu.Item
