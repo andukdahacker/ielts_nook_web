@@ -1,6 +1,7 @@
 import {
   ActionIcon,
   Center,
+  Loader,
   SimpleGrid,
   Stack,
   Text,
@@ -12,84 +13,99 @@ import {
   IconMessage,
   IconWriting,
 } from "@tabler/icons-react";
-import { useSearchParams } from "react-router";
-import ListeningComposerProvider from "./components/listening/listening_composer.provider";
-import ListeningComposer from "./components/listening/listening_composer.view";
-import ReadingComposerProvider from "./components/reading/reading_composer.provider";
-import ReadingComposer from "./components/reading/reading_composer.view";
+import { useNavigate } from "react-router";
+import useCreateExercise from "./hooks/use_create_exercise";
 
 function ExerciseComposerView() {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
 
-  switch (searchParams.get("type")) {
-    case "reading":
-      return (
-        <ReadingComposerProvider>
-          <ReadingComposer />
-        </ReadingComposerProvider>
-      );
-    case "listening":
-      return (
-        <ListeningComposerProvider>
-          <ListeningComposer />
-        </ListeningComposerProvider>
-      );
-    case "writing":
-      return <>Writing</>;
-    case "speaking":
-      return <>Speaking</>;
-    default:
-      return (
-        <Center h={"100vh"}>
+  const { mutate, status } = useCreateExercise({
+    onSuccess: (data) => {
+      navigate(`/exercise/${data.exercise.id}/edit`);
+    },
+  });
+
+  if (status == "pending")
+    return (
+      <Center>
+        <Loader />
+      </Center>
+    );
+
+  return (
+    <Center h={"100vh"}>
+      <Stack justify="center" align="center">
+        <Title order={1}>Exercise Composer</Title>
+        <Title order={4} mt={"lg"}>
+          Please pick a skill
+        </Title>
+        <SimpleGrid cols={2} mt={"lg"}>
           <Stack justify="center" align="center">
-            <Title order={1}>Exercise Composer</Title>
-            <Title order={4} mt={"lg"}>
-              Please pick a skill
-            </Title>
-            <SimpleGrid cols={2} mt={"lg"}>
-              <Stack justify="center" align="center">
-                <ActionIcon
-                  onClick={() => setSearchParams("type=reading")}
-                  size={128}
-                >
-                  <IconBook size={64} />
-                </ActionIcon>
-                <Text>Reading</Text>
-              </Stack>
-              <Stack justify="center" align="center">
-                <ActionIcon
-                  onClick={() => setSearchParams("type=listening")}
-                  size={128}
-                >
-                  <IconEar size={64} />
-                </ActionIcon>
-                <Text>Listening</Text>
-              </Stack>
-              <Stack justify="center" align="center">
-                <ActionIcon
-                  onClick={() => setSearchParams("type=writing")}
-                  size={128}
-                >
-                  <IconWriting size={64} />
-                </ActionIcon>
-
-                <Text>Writing</Text>
-              </Stack>
-              <Stack justify="center" align="center">
-                <ActionIcon
-                  onClick={() => setSearchParams("type=speaking")}
-                  size={128}
-                >
-                  <IconMessage size={64} />
-                </ActionIcon>
-
-                <Text>Speaking</Text>
-              </Stack>
-            </SimpleGrid>
+            <ActionIcon
+              onClick={() => {
+                mutate({
+                  name: "Untitled exercise",
+                  content: "",
+                  type: "READING",
+                });
+              }}
+              size={128}
+            >
+              <IconBook size={64} />
+            </ActionIcon>
+            <Text>Reading</Text>
           </Stack>
-        </Center>
-      );
-  }
+          <Stack justify="center" align="center">
+            <ActionIcon
+              onClick={() => {
+                mutate({
+                  name: "Untitled exercise",
+                  content: "",
+                  type: "LISTENING",
+                });
+              }}
+              size={128}
+            >
+              <IconEar size={64} />
+            </ActionIcon>
+            <Text>Listening</Text>
+          </Stack>
+          <Stack justify="center" align="center">
+            <ActionIcon
+              onClick={() => {
+                mutate({
+                  name: "Untitled exercise",
+                  content: "",
+                  type: "WRITING",
+                });
+              }}
+              size={128}
+            >
+              <IconWriting size={64} />
+            </ActionIcon>
+
+            <Text>Writing</Text>
+          </Stack>
+          <Stack justify="center" align="center">
+            <ActionIcon
+              onClick={() => {
+                mutate({
+                  name: "Untitled exercise",
+                  content: "",
+                  type: "SPEAKING",
+                });
+              }}
+              size={128}
+            >
+              <IconMessage size={64} />
+            </ActionIcon>
+
+            <Text>Speaking</Text>
+          </Stack>
+        </SimpleGrid>
+      </Stack>
+    </Center>
+  );
 }
 
 export default ExerciseComposerView;

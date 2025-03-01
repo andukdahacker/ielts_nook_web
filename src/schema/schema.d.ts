@@ -971,7 +971,7 @@ export interface paths {
                 content: {
                     "application/json": {
                         id: string;
-                        name: string;
+                        name?: string;
                         content: unknown;
                     };
                 };
@@ -1068,6 +1068,63 @@ export interface paths {
             };
         };
         delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/exercise/deleteListeningFile": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** @description Delete listening file for an exercise */
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        id: string;
+                        key: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            message: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                            message: string;
+                        };
+                    };
+                };
+            };
+        };
         options?: never;
         head?: never;
         patch?: never;
@@ -1239,6 +1296,74 @@ export interface paths {
         };
         put?: never;
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/exercise/uploadListeningFile": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Upload listening file for an exercise */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "multipart/form-data": {
+                        id: string;
+                        fileName: string;
+                        file: unknown;
+                    };
+                };
+            };
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                id: string;
+                                name: string;
+                                type: "READING" | "LISTENING" | "WRITING" | "SPEAKING";
+                                content: unknown;
+                                /** @default null */
+                                centerId: string | null;
+                                createdAt: unknown;
+                                updatedAt: unknown;
+                            };
+                            message: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                            message: string;
+                        };
+                    };
+                };
+            };
+        };
         delete?: never;
         options?: never;
         head?: never;
@@ -1473,7 +1598,11 @@ export interface components {
         };
         /** ListeningExercise */
         ListeningExercise: {
-            file: string;
+            file: {
+                url: string;
+                key: string;
+                fileName: string;
+            };
             tasks: {
                 order: number;
                 type: "Multiple choice" | "True/False/Not Given" | "Yes/No/Not Given" | "Summary Completion" | "Sentence Completion" | "Note Completion" | "Tabel Completion" | "Flowchart Completion" | "Matching heading to paragraph";
@@ -1553,8 +1682,35 @@ export interface components {
         /** UpdateExerciseInput */
         UpdateExerciseInput: {
             id: string;
-            name: string;
+            name?: string;
             content: unknown;
+        };
+        /** CreateExerciseResponseSchema */
+        CreateExerciseResponseSchema: {
+            data: {
+                exercise: {
+                    id: string;
+                    name: string;
+                    type: "READING" | "LISTENING" | "WRITING" | "SPEAKING";
+                    content: unknown;
+                    /** @default null */
+                    centerId: string | null;
+                    createdAt: unknown;
+                    updatedAt: unknown;
+                };
+            };
+            message: string;
+        };
+        /** UploadListeningFileInput */
+        UploadListeningFileInput: {
+            id: string;
+            fileName: string;
+            file: unknown;
+        };
+        /** DeleteListeningFileInput */
+        DeleteListeningFileInput: {
+            id: string;
+            key: string;
         };
     };
     responses: never;

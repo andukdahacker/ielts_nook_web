@@ -12,6 +12,8 @@ import {
   Text,
   TextInput,
 } from "@mantine/core";
+import { modals } from "@mantine/modals";
+import { notifications } from "@mantine/notifications";
 import {
   IconBook,
   IconDotsVertical,
@@ -29,6 +31,9 @@ import {
 import { Fragment, useCallback, useState } from "react";
 import { useNavigate } from "react-router";
 import useDebounce from "../../core/hooks/use_debouce";
+import { ExerciseType } from "../../schema/types";
+import useCreateExercise from "./hooks/use_create_exercise";
+import useDeleteExercise from "./hooks/use_delete_exercise";
 import useGetExerciseList from "./hooks/use_get_exercise_list";
 
 function ExerciseView() {
@@ -59,6 +64,54 @@ function ExerciseView() {
   }, [data]);
 
   const navigate = useNavigate();
+
+  const { mutateAsync: deleteExercise } = useDeleteExercise();
+
+  const handleDelete = (id: string) => {
+    modals.openConfirmModal({
+      title: "Delete exercise",
+      centered: true,
+      children: (
+        <Text>Are you sure you want to delete this exercise permanently?</Text>
+      ),
+      labels: { confirm: "Delete", cancel: "Cancel" },
+      onConfirm: async () => {
+        const notificationId = notifications.show({
+          message: "Deleting exercise...",
+          autoClose: false,
+        });
+
+        try {
+          await deleteExercise(id);
+        } finally {
+          notifications.hide(notificationId);
+        }
+      },
+    });
+  };
+
+  const { mutateAsync: createExercise } = useCreateExercise({
+    onSuccess: (data) => {
+      navigate(`/exercise/${data.exercise.id}/edit`);
+    },
+  });
+
+  const handleCreateExercise = async (type: ExerciseType) => {
+    const id = notifications.show({
+      message: "Creating exercise...",
+      autoClose: false,
+    });
+
+    try {
+      await createExercise({
+        type,
+        name: "Untitled exercise",
+        content: "",
+      });
+    } finally {
+      notifications.hide(id);
+    }
+  };
 
   return (
     <>
@@ -107,7 +160,7 @@ function ExerciseView() {
                 <Menu.Item
                   leftSection={<IconBook />}
                   onClick={() => {
-                    navigate(`/exercise/composer?type=reading`);
+                    handleCreateExercise("READING");
                   }}
                 >
                   Reading
@@ -115,7 +168,7 @@ function ExerciseView() {
                 <Menu.Item
                   leftSection={<IconEar />}
                   onClick={() => {
-                    navigate(`/exercise/composer?type=listening`);
+                    handleCreateExercise("LISTENING");
                   }}
                 >
                   Listening
@@ -123,7 +176,7 @@ function ExerciseView() {
                 <Menu.Item
                   leftSection={<IconWriting />}
                   onClick={() => {
-                    navigate(`/exercise/composer?type=writing`);
+                    handleCreateExercise("WRITING");
                   }}
                 >
                   Writing
@@ -131,7 +184,7 @@ function ExerciseView() {
                 <Menu.Item
                   leftSection={<IconMessage />}
                   onClick={() => {
-                    navigate(`/exercise/composer?type=speaking`);
+                    handleCreateExercise("SPEAKING");
                   }}
                 >
                   Speaking
@@ -194,6 +247,7 @@ function ExerciseView() {
                               <Menu.Item
                                 leftSection={<IconTrash size={14} />}
                                 color="red"
+                                onClick={() => handleDelete(e.id)}
                               >
                                 Delete
                               </Menu.Item>

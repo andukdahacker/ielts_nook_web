@@ -1,32 +1,32 @@
 import {
-  ActionIcon,
-  Badge,
-  Box,
-  Button,
-  Center,
-  Flex,
-  Group,
-  Loader,
-  Menu,
-  Modal,
-  ScrollArea,
-  Table,
-  Text,
-  TextInput,
-  Tooltip,
+    ActionIcon,
+    Badge,
+    Box,
+    Button,
+    Center,
+    Flex,
+    Group,
+    Loader,
+    Menu,
+    Modal,
+    ScrollArea,
+    Table,
+    Text,
+    TextInput,
+    Tooltip,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { modals, openContextModal } from "@mantine/modals";
 import { notifications } from "@mantine/notifications";
 import {
-  IconDotsVertical,
-  IconEdit,
-  IconFilter,
-  IconFolderRoot,
-  IconPlus,
-  IconReload,
-  IconSearch,
-  IconTrash,
+    IconDotsVertical,
+    IconEdit,
+    IconFilter,
+    IconFolderRoot,
+    IconPlus,
+    IconReload,
+    IconSearch,
+    IconTrash,
 } from "@tabler/icons-react";
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router";
@@ -93,9 +93,12 @@ function UsersView() {
           message: "Deleting user...",
           autoClose: false,
         });
-        await mutateAsync(user.id);
 
-        notifications.hide(id);
+        try {
+          await mutateAsync(user.id);
+        } finally {
+          notifications.hide(id);
+        }
       },
     });
   };

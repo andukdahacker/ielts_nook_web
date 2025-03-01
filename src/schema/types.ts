@@ -5,6 +5,7 @@ export type Center = components["schemas"]["Center"];
 export type User = components["schemas"]["User"];
 export type Class = components["schemas"]["Class"];
 export type Exercise = components["schemas"]["Exercise"];
+export type ExerciseType = components["schemas"]["ExerciseType"];
 
 export type ReadingExercise = components["schemas"]["ReadingExercise"];
 export type ReadingExerciseType = ReadingExercise["tasks"][0]["type"];
@@ -27,3 +28,10 @@ export type GetExerciseListInput =
   components["schemas"]["GetExerciseListInput"];
 export type CreateExerciseInput = components["schemas"]["CreateExerciseInput"];
 export type UpdateExerciseInput = components["schemas"]["UpdateExerciseInput"];
+export type UploadListeningFileInput =
+  components["schemas"]["UploadListeningFileInput"];
+export type DeleteListeningFileInput =
+  components["schemas"]["DeleteListeningFileInput"];
+
+export type CreateExerciseResponse =
+  components["schemas"]["CreateExerciseResponseSchema"];

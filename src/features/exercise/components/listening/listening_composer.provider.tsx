@@ -1,5 +1,6 @@
 import { PropsWithChildren, useState } from "react";
 import {
+  Exercise,
   ListeningExercise,
   ListeningExerciseType,
   ListeningMultipleChoiceTask,
@@ -7,10 +8,23 @@ import {
 } from "../../../../schema/types";
 import ListeningComposerContext from "./listening_composer.context";
 
-function ListeningComposerProvider({ children }: PropsWithChildren) {
-  const [name, setName] = useState("");
+interface ListeningComposerProviderProps {
+  exercise?: Exercise;
+  listeningExercise?: ListeningExercise;
+}
 
-  const [tasks, setTasks] = useState<ListeningExercise["tasks"]>([]);
+function ListeningComposerProvider({
+  children,
+  exercise,
+  listeningExercise,
+}: PropsWithChildren<ListeningComposerProviderProps>) {
+  const [name, setName] = useState(exercise?.name ?? "");
+
+  const [file, setFile] = useState(listeningExercise?.file);
+
+  const [tasks, setTasks] = useState<ListeningExercise["tasks"]>(
+    listeningExercise?.tasks ?? [],
+  );
 
   const addTask = (type: ListeningExerciseType) => {
     switch (type) {
@@ -66,10 +80,13 @@ function ListeningComposerProvider({ children }: PropsWithChildren) {
       value={{
         name,
         setName,
+        file,
+        setFile,
         tasks,
         addTask,
         removeTask,
         editTask,
+        exercise,
       }}
     >
       {children}
