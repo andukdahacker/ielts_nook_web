@@ -32,7 +32,7 @@ function ListeningMultipleChoice({
   index,
   task,
 }: ListeningMultipleChoiceProps) {
-  const { removeTask, editTask } = useContext(ListeningComposerContext);
+  const { removeTask, editTask, tasks } = useContext(ListeningComposerContext);
 
   const editInstruction = (value: JSONContent) => {
     editTask<ListeningMultipleChoiceTask>(index, {
@@ -232,6 +232,20 @@ function ListeningMultipleChoice({
     });
   };
 
+  const questionsBefore = () => {
+    const tasksBefore = tasks.slice(0, index);
+
+    let result = 0;
+
+    tasksBefore.forEach((task) => {
+      task.questions.forEach(() => {
+        result++;
+      });
+    });
+
+    return result;
+  };
+
   return (
     <Stack className={classes.container} p={"xs"}>
       <Group justify="space-between">
@@ -277,7 +291,9 @@ function ListeningMultipleChoice({
                       >
                         <Group align="center">
                           <Center>
-                            <Text>{questionIndex + 1}. </Text>
+                            <Text>
+                              {questionIndex + 1 + questionsBefore()}.
+                            </Text>
                           </Center>
                           <TextInput
                             flex={1}

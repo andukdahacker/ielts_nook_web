@@ -1,5 +1,6 @@
 import { Center, Loader } from "@mantine/core";
 import { useParams } from "react-router";
+import WritingExerciseDetailView from "./components/writing/writing_exercise_detail.view";
 import useGetExercise from "./hooks/use_get_exercise";
 
 function ExerciseDetailView() {
@@ -24,7 +25,13 @@ function ExerciseDetailView() {
         }
         case "LISTENING":
         case "SPEAKING":
-        case "WRITING":
+        case "WRITING": {
+          return (
+            <>
+              <WritingExerciseDetailView exercise={data.exercise} />
+            </>
+          );
+        }
         default:
           return <>{data.exercise.name}</>;
       }

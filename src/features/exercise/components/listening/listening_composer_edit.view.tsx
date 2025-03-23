@@ -21,7 +21,7 @@ import {
   IconUpload,
   IconX,
 } from "@tabler/icons-react";
-import { useContext, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import {
   ListeningExercise,
   ListeningExerciseType,
@@ -34,6 +34,7 @@ import TaskPlaceholder from "../common/task_placeholder.view";
 import ListeningComposerContext from "./listening_composer.context";
 import classes from "./listening_composer.module.css";
 import ListeningMultipleChoice from "./listening_multiple_choice.view";
+import ListeningPreviewerView from "./listening_previewer.view";
 
 type ListeningTaskTag = {
   type: ListeningExerciseType;
@@ -94,7 +95,10 @@ function ListeningComposerEdit() {
       },
     });
 
-  const {mutate: updateExercise, status: updateExerciseStatus} = useUpdateExercise()
+  const { mutate: updateExercise, status: updateExerciseStatus } =
+    useUpdateExercise();
+
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   return (
     <>
@@ -249,16 +253,21 @@ function ListeningComposerEdit() {
                   align="center"
                   p={"xs"}
                 >
-                  <Button size="xs" onClick={() => {
-                    updateExercise({
-                      content: {
-                        file,
-                        tasks
-                      },
-                      id: exercise?.id ?? "",
-                      name
-                    })
-                  }}>
+                  <Button
+                    size="xs"
+                    onClick={() => {
+                      updateExercise({
+                        content: {
+                          file,
+                          tasks,
+                        },
+                        id: exercise?.id ?? "",
+                        name,
+                      });
+                    }}
+                    loading={updateExerciseStatus == "pending"}
+                    disabled={updateExerciseStatus == "pending"}
+                  >
                     Save changes
                   </Button>
                 </Group>
@@ -269,10 +278,18 @@ function ListeningComposerEdit() {
       </Stack>
       <Modal
         opened={opened}
-        onClose={close}
+        onClose={() => {
+          if(audioRef.current) {
+            audioRef.current.pause();
+            audioRef.current.currentTime = 0;
+          }
+          close();
+        }}
         title={"Preview"}
         fullScreen={true}
-      ></Modal>
+      >
+        <ListeningPreviewerView file={file} tasks={tasks} audioRef={audioRef}/>
+      </Modal>
     </>
   );
 }

@@ -20,6 +20,9 @@ export type ListeningMultipleChoiceTask =
   components["schemas"]["ListeningMultipleChoiceTask"];
 export type ListeningTask = ListeningMultipleChoiceTask;
 
+export type WritingExercise = components["schemas"]["WritingExercise"];
+export type WritingExerciseType = components["schemas"]["WritingExerciseType"];
+
 export type RegisterCenterInput = components["schemas"]["RegisterCenterInput"];
 export type GetCenterClassListInput =
   components["schemas"]["GetClassListInput"];
@@ -32,6 +35,14 @@ export type UploadListeningFileInput =
   components["schemas"]["UploadListeningFileInput"];
 export type DeleteListeningFileInput =
   components["schemas"]["DeleteListeningFileInput"];
+export type UploadWritingImageInput =
+  components["schemas"]["UploadWritingImageInput"];
+export type DeleteWritingImageInput =
+  components["schemas"]["DeleteWritingImageInput"];
+export type CreateAssignmentsInput =
+  components["schemas"]["CreateAssignmentsInput"];
 
 export type CreateExerciseResponse =
   components["schemas"]["CreateExerciseResponseSchema"];
+export type CreateAssignmentsResponse =
+  components["schemas"]["CreateAssignmentsResponse"];

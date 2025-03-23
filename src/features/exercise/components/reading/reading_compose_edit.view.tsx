@@ -76,7 +76,8 @@ function ReadingComposerEdit() {
 
   const { status, mutate } = useUpdateExercise();
 
-  const [opened, { open, close }] = useDisclosure();
+  const [previewOpened, { open: openPreview, close: closePreview }] =
+    useDisclosure();
 
   const { id } = useParams();
 
@@ -99,9 +100,11 @@ function ReadingComposerEdit() {
                 }}
                 size="xs"
               />
-              <Button size="xs" variant="transparent" onClick={open}>
-                Preview form
-              </Button>
+              <Group>
+                <Button size="xs" variant="transparent" onClick={openPreview}>
+                  Preview form
+                </Button>
+              </Group>
             </Group>
             <Flex
               direction={"row"}
@@ -199,8 +202,8 @@ function ReadingComposerEdit() {
         </Paper>
       </Stack>
       <Modal
-        opened={opened}
-        onClose={close}
+        opened={previewOpened}
+        onClose={closePreview}
         title={"Preview"}
         fullScreen={true}
       >

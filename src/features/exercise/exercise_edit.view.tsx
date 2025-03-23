@@ -1,10 +1,16 @@
 import { Center, Loader } from "@mantine/core";
 import { useParams } from "react-router";
-import { ListeningExercise, ReadingExercise } from "../../schema/types";
+import {
+  ListeningExercise,
+  ReadingExercise,
+  WritingExercise,
+} from "../../schema/types";
 import ListeningComposerProvider from "./components/listening/listening_composer.provider";
 import ListeningComposerEdit from "./components/listening/listening_composer_edit.view";
 import ReadingComposerEdit from "./components/reading/reading_compose_edit.view";
 import ReadingComposerProvider from "./components/reading/reading_composer.provider";
+import WritingComposerProvider from "./components/writing/writing_composer.provider";
+import WritingComposerEditView from "./components/writing/writing_composer_edit.view";
 import useGetExercise from "./hooks/use_get_exercise";
 
 function ExerciseEditView() {
@@ -48,8 +54,19 @@ function ExerciseEditView() {
             </ListeningComposerProvider>
           );
         }
+        case "WRITING": {
+          const writingExercise = data.exercise.content as WritingExercise;
+
+          return (
+            <WritingComposerProvider
+              writingExercise={writingExercise}
+              exercise={data.exercise}
+            >
+              <WritingComposerEditView />
+            </WritingComposerProvider>
+          );
+        }
         case "SPEAKING":
-        case "WRITING":
         default:
           return <>{data.exercise.name}</>;
       }

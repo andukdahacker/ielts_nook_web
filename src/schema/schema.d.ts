@@ -1370,6 +1370,382 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/exercise/uploadWritingImage": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Upload image for an exercise */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "multipart/form-data": {
+                        id: string;
+                        fileName: string;
+                        file: unknown;
+                    };
+                };
+            };
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                id: string;
+                                name: string;
+                                type: "READING" | "LISTENING" | "WRITING" | "SPEAKING";
+                                content: unknown;
+                                /** @default null */
+                                centerId: string | null;
+                                createdAt: unknown;
+                                updatedAt: unknown;
+                            };
+                            message: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                            message: string;
+                        };
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/exercise/writingImage": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** @description Delete writing image */
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        id: string;
+                        key: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            message: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                            message: string;
+                        };
+                    };
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/assignment/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** @description Update assignments */
+        put: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        id: string;
+                        title?: string;
+                        dueDate?: unknown;
+                    };
+                };
+            };
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                id: string;
+                                title: string;
+                                /** @default null */
+                                dueDate: unknown | null;
+                                classMemberClassId: string;
+                                classMemberUserId: string;
+                                exerciseId: string;
+                                createdAt: unknown;
+                                updatedAt: unknown;
+                            };
+                            message: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                            message: string;
+                        };
+                    };
+                };
+            };
+        };
+        /** @description Create assigments */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        title: string;
+                        exerciseId: string;
+                        dueDate?: unknown;
+                        students: {
+                            classId: string;
+                            userId: string;
+                        }[];
+                    };
+                };
+            };
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                assignments: {
+                                    id: string;
+                                    title: string;
+                                    /** @default null */
+                                    dueDate: unknown | null;
+                                    classMemberClassId: string;
+                                    classMemberUserId: string;
+                                    exerciseId: string;
+                                    createdAt: unknown;
+                                    updatedAt: unknown;
+                                }[];
+                            };
+                            message: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                            message: string;
+                        };
+                    };
+                };
+            };
+        };
+        /** @description Delete assignment */
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        id: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            message: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                            message: string;
+                        };
+                    };
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/assignment/exercise": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Get assignments by exercise */
+        get: {
+            parameters: {
+                query?: {
+                    exerciseId?: string;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                assignments: {
+                                    assignment: {
+                                        id: string;
+                                        title: string;
+                                        /** @default null */
+                                        dueDate: unknown | null;
+                                        classMemberClassId: string;
+                                        classMemberUserId: string;
+                                        exerciseId: string;
+                                        createdAt: unknown;
+                                        updatedAt: unknown;
+                                    };
+                                    user: {
+                                        id: string;
+                                        email: string;
+                                        /** @default null */
+                                        username: string | null;
+                                        /** @default null */
+                                        firstName: string | null;
+                                        /** @default null */
+                                        lastName: string | null;
+                                        centerId: string;
+                                        role: "ADMIN" | "TEACHER" | "STUDENT";
+                                        /** @default null */
+                                        phoneNumber: string | null;
+                                        createdAt: unknown;
+                                        updatedAt: unknown;
+                                    };
+                                }[];
+                            };
+                            message: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                            message: string;
+                        };
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -1652,6 +2028,22 @@ export interface components {
             order: number;
             value: string;
         };
+        /** WritingExercise */
+        WritingExercise: {
+            /** @default null */
+            file: {
+                url: string;
+                key: string;
+                fileName: string;
+            } | null;
+            /** WritingExerciseType */
+            type: "Task 1" | "Task 2";
+            title: unknown;
+            /** @default null */
+            duration: number | null;
+        };
+        /** WritingExerciseType */
+        WritingExerciseType: "Task 1" | "Task 2";
         /** ExerciseType */
         ExerciseType: "READING" | "LISTENING" | "WRITING" | "SPEAKING";
         /** Exercise */
@@ -1711,6 +2103,56 @@ export interface components {
         DeleteListeningFileInput: {
             id: string;
             key: string;
+        };
+        /** UploadWritingImageInput */
+        UploadWritingImageInput: {
+            id: string;
+            fileName: string;
+            file: unknown;
+        };
+        /** DeleteWritingImageInput */
+        DeleteWritingImageInput: {
+            id: string;
+            key: string;
+        };
+        /** Assignment */
+        Assignment: {
+            id: string;
+            title: string;
+            /** @default null */
+            dueDate: unknown | null;
+            classMemberClassId: string;
+            classMemberUserId: string;
+            exerciseId: string;
+            createdAt: unknown;
+            updatedAt: unknown;
+        };
+        /** CreateAssignmentsInput */
+        CreateAssignmentsInput: {
+            title: string;
+            exerciseId: string;
+            dueDate?: unknown;
+            students: {
+                classId: string;
+                userId: string;
+            }[];
+        };
+        /** CreateAssignmentsResponse */
+        CreateAssignmentsResponse: {
+            data: {
+                assignments: {
+                    id: string;
+                    title: string;
+                    /** @default null */
+                    dueDate: unknown | null;
+                    classMemberClassId: string;
+                    classMemberUserId: string;
+                    exerciseId: string;
+                    createdAt: unknown;
+                    updatedAt: unknown;
+                }[];
+            };
+            message: string;
         };
     };
     responses: never;

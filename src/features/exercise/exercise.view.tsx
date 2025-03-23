@@ -7,11 +7,13 @@ import {
   Group,
   Loader,
   Menu,
+  Modal,
   ScrollArea,
   Table,
   Text,
   TextInput,
 } from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
 import { modals } from "@mantine/modals";
 import { notifications } from "@mantine/notifications";
 import {
@@ -26,19 +28,23 @@ import {
   IconReload,
   IconSearch,
   IconTrash,
+  IconUserShare,
   IconWriting,
 } from "@tabler/icons-react";
 import { Fragment, useCallback, useState } from "react";
 import { useNavigate } from "react-router";
 import useDebounce from "../../core/hooks/use_debouce";
 import { ExerciseType } from "../../schema/types";
+import AssignExerciseView from "../assignment/assign_exercise.view";
 import useCreateExercise from "./hooks/use_create_exercise";
 import useDeleteExercise from "./hooks/use_delete_exercise";
 import useGetExerciseList from "./hooks/use_get_exercise_list";
 
 function ExerciseView() {
+  const [opened, { close, open }] = useDisclosure();
   const [searchString, setSearchString] = useState("");
   const debouncedSearchString = useDebounce(searchString, 500);
+  const [currentAssign, setCurrentAssign] = useState("");
 
   const {
     data,
@@ -245,6 +251,15 @@ function ExerciseView() {
                                 Edit
                               </Menu.Item>
                               <Menu.Item
+                                leftSection={<IconUserShare size={14} />}
+                                onClick={() => {
+                                  setCurrentAssign(e.id);
+                                  open();
+                                }}
+                              >
+                                Assign
+                              </Menu.Item>
+                              <Menu.Item
                                 leftSection={<IconTrash size={14} />}
                                 color="red"
                                 onClick={() => handleDelete(e.id)}
@@ -274,6 +289,14 @@ function ExerciseView() {
           </ScrollArea>
         )}
       </Box>
+      <Modal
+        opened={opened}
+        onClose={close}
+        fullScreen
+        title="Assign to students"
+      >
+        <AssignExerciseView onAssign={close} exerciseId={currentAssign} />
+      </Modal>
     </>
   );
 }

@@ -1,0 +1,11 @@
+.header {
+    border-bottom: 1px;
+    border-bottom-color: var(--mantine-color-default-border);
+    border-bottom-style: solid;
+}
+
+.composerFooter {
+    border-top: 1px;
+    border-top-color: var(--mantine-color-default-border);
+    border-top-style: solid;
+}
