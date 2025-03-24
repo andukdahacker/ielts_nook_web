@@ -1,7 +1,7 @@
-import { Center, Loader, Paper, Stack } from "@mantine/core";
+import { Center, Loader, Paper, Space, Stack, Title } from "@mantine/core";
 import { Content } from "@tiptap/react";
-import { Fragment } from "react/jsx-runtime";
 import { Exercise, WritingExercise } from "../../../../schema/types";
+import AssignmentsByExerciseTable from "../../../assignment/components/assignment_by_exercise_table.view";
 import useGetAssignmentByExercise from "../../../assignment/hooks/use_get_assignment_by_exercise";
 import WritingPreviewerView from "./writing_previewer.view";
 
@@ -17,8 +17,9 @@ function WritingExerciseDetailView({
   const { data, status, error } = useGetAssignmentByExercise(exercise.id);
 
   return (
-    <Stack>
-      <Paper withBorder p={"lg"} m={"lg"}>
+    <Stack p={"lg"}>
+      <Title order={3}>Preview</Title>
+      <Paper withBorder p={"lg"}>
         <WritingPreviewerView
           title={writingExercise.title as Content}
           type={writingExercise.type}
@@ -28,6 +29,7 @@ function WritingExerciseDetailView({
         />
       </Paper>
 
+      <Space h={"md"} />
       {status == "pending" ? (
         <Center>
           <Loader />
@@ -36,13 +38,7 @@ function WritingExerciseDetailView({
         <Center>{error.message}</Center>
       ) : (
         <>
-          <Stack>
-            {data.assignments.map((e) => {
-              return (
-                <Fragment key={e.assignment.id}>{e.assignment.title}</Fragment>
-              );
-            })}
-          </Stack>
+          <AssignmentsByExerciseTable data={data} />
         </>
       )}
     </Stack>

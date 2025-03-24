@@ -1536,6 +1536,7 @@ export interface paths {
                                 classMemberClassId: string;
                                 classMemberUserId: string;
                                 exerciseId: string;
+                                status: "ASSIGNED" | "SUBMITTED" | "REVIEWED";
                                 createdAt: unknown;
                                 updatedAt: unknown;
                             };
@@ -1595,6 +1596,7 @@ export interface paths {
                                     classMemberClassId: string;
                                     classMemberUserId: string;
                                     exerciseId: string;
+                                    status: "ASSIGNED" | "SUBMITTED" | "REVIEWED";
                                     createdAt: unknown;
                                     updatedAt: unknown;
                                 }[];
@@ -1699,6 +1701,7 @@ export interface paths {
                                         classMemberClassId: string;
                                         classMemberUserId: string;
                                         exerciseId: string;
+                                        status: "ASSIGNED" | "SUBMITTED" | "REVIEWED";
                                         createdAt: unknown;
                                         updatedAt: unknown;
                                     };
@@ -1715,6 +1718,14 @@ export interface paths {
                                         role: "ADMIN" | "TEACHER" | "STUDENT";
                                         /** @default null */
                                         phoneNumber: string | null;
+                                        createdAt: unknown;
+                                        updatedAt: unknown;
+                                    };
+                                    class: {
+                                        id: string;
+                                        name: string;
+                                        /** @default null */
+                                        description: string | null;
                                         createdAt: unknown;
                                         updatedAt: unknown;
                                     };
@@ -2124,6 +2135,7 @@ export interface components {
             classMemberClassId: string;
             classMemberUserId: string;
             exerciseId: string;
+            status: "ASSIGNED" | "SUBMITTED" | "REVIEWED";
             createdAt: unknown;
             updatedAt: unknown;
         };
@@ -2148,8 +2160,53 @@ export interface components {
                     classMemberClassId: string;
                     classMemberUserId: string;
                     exerciseId: string;
+                    status: "ASSIGNED" | "SUBMITTED" | "REVIEWED";
                     createdAt: unknown;
                     updatedAt: unknown;
+                }[];
+            };
+            message: string;
+        };
+        /** GetAssignmentsByExerciseResponse */
+        GetAssignmentsByExerciseResponse: {
+            data: {
+                assignments: {
+                    assignment: {
+                        id: string;
+                        title: string;
+                        /** @default null */
+                        dueDate: unknown | null;
+                        classMemberClassId: string;
+                        classMemberUserId: string;
+                        exerciseId: string;
+                        status: "ASSIGNED" | "SUBMITTED" | "REVIEWED";
+                        createdAt: unknown;
+                        updatedAt: unknown;
+                    };
+                    user: {
+                        id: string;
+                        email: string;
+                        /** @default null */
+                        username: string | null;
+                        /** @default null */
+                        firstName: string | null;
+                        /** @default null */
+                        lastName: string | null;
+                        centerId: string;
+                        role: "ADMIN" | "TEACHER" | "STUDENT";
+                        /** @default null */
+                        phoneNumber: string | null;
+                        createdAt: unknown;
+                        updatedAt: unknown;
+                    };
+                    class: {
+                        id: string;
+                        name: string;
+                        /** @default null */
+                        description: string | null;
+                        createdAt: unknown;
+                        updatedAt: unknown;
+                    };
                 }[];
             };
             message: string;

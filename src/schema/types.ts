@@ -6,6 +6,7 @@ export type User = components["schemas"]["User"];
 export type Class = components["schemas"]["Class"];
 export type Exercise = components["schemas"]["Exercise"];
 export type ExerciseType = components["schemas"]["ExerciseType"];
+export type Assignment = components["schemas"]["Assignment"];
 
 export type ReadingExercise = components["schemas"]["ReadingExercise"];
 export type ReadingExerciseType = ReadingExercise["tasks"][0]["type"];
@@ -46,3 +47,5 @@ export type CreateExerciseResponse =
   components["schemas"]["CreateExerciseResponseSchema"];
 export type CreateAssignmentsResponse =
   components["schemas"]["CreateAssignmentsResponse"];
+export type GetAssignmentsByExerciseResponse =
+  components["schemas"]["GetAssignmentsByExerciseResponse"];
