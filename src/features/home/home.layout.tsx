@@ -15,12 +15,20 @@ import { notifications } from "@mantine/notifications";
 import { IconLogout, IconMoon, IconSun } from "@tabler/icons-react";
 import { Outlet, useNavigate } from "react-router";
 
+import dayjs from "dayjs";
+import duration from "dayjs/plugin/duration";
+import { useContext } from "react";
 import { firebaseAuth } from "../../core/firebase";
 import AuthProvider from "../auth/auth_provider";
+import HomeContext from "./home.context";
 import NavBarView from "./navbar.view";
+
+dayjs.extend(duration);
 
 function HomeLayout() {
   const navigate = useNavigate();
+
+  const { showTimer, timer } = useContext(HomeContext);
 
   const { setColorScheme } = useMantineColorScheme();
   const computedColorScheme = useComputedColorScheme("light", {
@@ -87,6 +95,13 @@ function HomeLayout() {
                 visibleFrom="sm"
                 size="sm"
               />
+              {showTimer && (
+                <Text>
+                  {dayjs
+                    .duration(timer, "seconds")
+                    .format("mm [minutes] ss [seconds remaining]")}
+                </Text>
+              )}
             </Group>
             <Box>
               <ActionIcon

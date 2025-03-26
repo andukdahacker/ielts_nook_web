@@ -3,6 +3,7 @@ import {
   Icon,
   IconBooks,
   IconHome,
+  IconLibrary,
   IconProps,
   IconUsers,
   IconUsersGroup,
@@ -41,6 +42,12 @@ const navs: {
     label: "Exercises",
     to: "/exercise",
     role: ["ADMIN", "TEACHER"],
+  },
+  {
+    icon: IconLibrary,
+    label: "Assigments",
+    to: "/assignment",
+    role: ["STUDENT"],
   },
 ];
 

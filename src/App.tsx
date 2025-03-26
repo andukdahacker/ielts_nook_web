@@ -4,6 +4,8 @@ import { Notifications } from "@mantine/notifications";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Route, Routes } from "react-router";
 
+import DoAssignmentView from "./features/assignment/do_assignment.view";
+import StudentAssignmentView from "./features/assignment/student_assignment.view";
 import AuthLayout from "./features/auth/views/auth.layout";
 import RegisterView from "./features/auth/views/register.view";
 import SignInView from "./features/auth/views/sign_in.view";
@@ -14,6 +16,7 @@ import ExerciseComposerView from "./features/exercise/exercise_composer.view";
 import ExerciseDetailView from "./features/exercise/exercise_detail.view";
 import ExerciseEditView from "./features/exercise/exercise_edit.view";
 import HomeLayout from "./features/home/home.layout";
+import HomeProvider from "./features/home/home.provider";
 import HomeView from "./features/home/home.view";
 import EditUserModal from "./features/users/edit_user.modal";
 import UserDetailView from "./features/users/user_detail.view";
@@ -42,34 +45,47 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <MantineProvider theme={{ fontFamily: "Montserrat, sans-serif" }}>
         <Notifications />
-        <ModalsProvider modals={modals}>
-          <BrowserRouter>
-            <Routes>
-              <Route element={<HomeLayout />}>
-                <Route index path="/" element={<HomeView />} />
-                <Route path="/users" element={<UsersView />} />
-                <Route path="/users/:id" element={<UserDetailView />} />
-                <Route path="/class" element={<ClassView />} />
-                <Route path="/class/:id" element={<ClassDetailView />} />
-                <Route path="/exercise" element={<ExerciseView />} />
-                <Route path="/exercise/:id" element={<ExerciseDetailView />} />
-                <Route
-                  path="/exercise/:id/edit"
-                  element={<ExerciseEditView />}
-                />
-                <Route
-                  path="/exercise/composer"
-                  element={<ExerciseComposerView />}
-                />
-              </Route>
+        <HomeProvider>
+          <ModalsProvider modals={modals}>
+            <BrowserRouter>
+              <Routes>
+                <Route element={<HomeLayout />}>
+                  <Route index path="/" element={<HomeView />} />
+                  <Route path="/users" element={<UsersView />} />
+                  <Route path="/users/:id" element={<UserDetailView />} />
+                  <Route path="/class" element={<ClassView />} />
+                  <Route path="/class/:id" element={<ClassDetailView />} />
+                  <Route path="/exercise" element={<ExerciseView />} />
+                  <Route
+                    path="/exercise/:id"
+                    element={<ExerciseDetailView />}
+                  />
+                  <Route
+                    path="/exercise/:id/edit"
+                    element={<ExerciseEditView />}
+                  />
+                  <Route
+                    path="/exercise/composer"
+                    element={<ExerciseComposerView />}
+                  />
+                  <Route
+                    path="/assignment"
+                    element={<StudentAssignmentView />}
+                  />
+                  <Route
+                    path="/assignment/:id/do"
+                    element={<DoAssignmentView />}
+                  />
+                </Route>
 
-              <Route element={<AuthLayout />}>
-                <Route index path="register" element={<RegisterView />} />
-                <Route path="signIn" element={<SignInView />} />
-              </Route>
-            </Routes>
-          </BrowserRouter>
-        </ModalsProvider>
+                <Route element={<AuthLayout />}>
+                  <Route index path="register" element={<RegisterView />} />
+                  <Route path="signIn" element={<SignInView />} />
+                </Route>
+              </Routes>
+            </BrowserRouter>
+          </ModalsProvider>
+        </HomeProvider>
       </MantineProvider>
     </QueryClientProvider>
   );

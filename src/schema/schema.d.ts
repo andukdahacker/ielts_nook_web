@@ -1757,6 +1757,241 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/assignment/student": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Get student's assignments */
+        get: {
+            parameters: {
+                query: {
+                    userId: string;
+                    take: number;
+                    cursor?: string;
+                    searchString?: string;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data?: {
+                                nodes: {
+                                    assignment: {
+                                        id: string;
+                                        title: string;
+                                        /** @default null */
+                                        dueDate: unknown | null;
+                                        classMemberClassId: string;
+                                        classMemberUserId: string;
+                                        exerciseId: string;
+                                        status: "ASSIGNED" | "SUBMITTED" | "REVIEWED";
+                                        createdAt: unknown;
+                                        updatedAt: unknown;
+                                    };
+                                    class: {
+                                        id: string;
+                                        name: string;
+                                        /** @default null */
+                                        description: string | null;
+                                        createdAt: unknown;
+                                        updatedAt: unknown;
+                                    };
+                                    exercise: {
+                                        id: string;
+                                        name: string;
+                                        type: "READING" | "LISTENING" | "WRITING" | "SPEAKING";
+                                        content: unknown;
+                                        /** @default null */
+                                        centerId: string | null;
+                                        createdAt: unknown;
+                                        updatedAt: unknown;
+                                    };
+                                }[];
+                                pageInfo: {
+                                    hasNextPage: boolean;
+                                    cursor?: string;
+                                };
+                            };
+                            message: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                            message: string;
+                        };
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/assignment/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Get assignment */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                assignment: {
+                                    id: string;
+                                    title: string;
+                                    /** @default null */
+                                    dueDate: unknown | null;
+                                    classMemberClassId: string;
+                                    classMemberUserId: string;
+                                    exerciseId: string;
+                                    status: "ASSIGNED" | "SUBMITTED" | "REVIEWED";
+                                    createdAt: unknown;
+                                    updatedAt: unknown;
+                                };
+                                exercise: {
+                                    id: string;
+                                    name: string;
+                                    type: "READING" | "LISTENING" | "WRITING" | "SPEAKING";
+                                    content: unknown;
+                                    /** @default null */
+                                    centerId: string | null;
+                                    createdAt: unknown;
+                                    updatedAt: unknown;
+                                };
+                            };
+                            message: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                            message: string;
+                        };
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/submission/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Create submission */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        assignmentId: string;
+                        content: unknown;
+                    };
+                };
+            };
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                id: string;
+                                assignmentId: string;
+                                content: unknown;
+                                grade: unknown;
+                                feedback: unknown;
+                                createdAt: unknown;
+                                updatedAt: unknown;
+                            };
+                            message: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                            message: string;
+                        };
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -2210,6 +2445,28 @@ export interface components {
                 }[];
             };
             message: string;
+        };
+        /** GetAssignmentByUserInput */
+        GetAssignmentByUserInput: {
+            userId: string;
+            take: number;
+            cursor?: string;
+            searchString?: string;
+        };
+        /** Submission */
+        Submission: {
+            id: string;
+            assignmentId: string;
+            content: unknown;
+            grade: unknown;
+            feedback: unknown;
+            createdAt: unknown;
+            updatedAt: unknown;
+        };
+        /** CreateSubmissionInput */
+        CreateSubmissionInput: {
+            assignmentId: string;
+            content: unknown;
         };
     };
     responses: never;
