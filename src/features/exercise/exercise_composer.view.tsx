@@ -15,6 +15,11 @@ import {
 } from "@tabler/icons-react";
 import { useNavigate } from "react-router";
 import useCreateExercise from "./hooks/use_create_exercise";
+import {
+  ListeningExercise,
+  ReadingExercise,
+  WritingExercise,
+} from "../../schema/types";
 
 function ExerciseComposerView() {
   const navigate = useNavigate();
@@ -45,7 +50,11 @@ function ExerciseComposerView() {
               onClick={() => {
                 mutate({
                   name: "Untitled exercise",
-                  content: "",
+                  content: {
+                    content: "",
+                    tasks: [],
+                    title: "",
+                  } as ReadingExercise,
                   type: "READING",
                 });
               }}
@@ -60,7 +69,9 @@ function ExerciseComposerView() {
               onClick={() => {
                 mutate({
                   name: "Untitled exercise",
-                  content: "",
+                  content: {
+                    tasks: [],
+                  } as ListeningExercise,
                   type: "LISTENING",
                 });
               }}
@@ -75,7 +86,10 @@ function ExerciseComposerView() {
               onClick={() => {
                 mutate({
                   name: "Untitled exercise",
-                  content: "",
+                  content: {
+                    duration: 0,
+                    type: "Task 1",
+                  } as WritingExercise,
                   type: "WRITING",
                 });
               }}

@@ -60,10 +60,25 @@ function ReadingPreviewerView({
         <Allotment.Pane>
           <ScrollArea h={"calc(100vh - 6rem)"}>
             <Stack p={"md"}>
-              {tasks.map((e) => {
+              {tasks.map((e, taskIndex) => {
                 switch (e.type) {
                   case "Multiple choice": {
                     const task = e as ReadingMultipleChoiceTask;
+
+                    const questionBefore = () => {
+                      const tasksBefore = tasks.slice(0, taskIndex);
+
+                      let result = 0;
+
+                      tasksBefore.forEach((task) => {
+                        task.questions.forEach(() => {
+                          result++;
+                        });
+                      });
+
+                      return result;
+                    };
+
                     return (
                       <Stack key={`task-${task.type}-${task.order}`}>
                         {task.questions.map((question) => (
@@ -71,7 +86,7 @@ function ReadingPreviewerView({
                             key={`task-${task.type}-question${question.order}`}
                           >
                             <Group>
-                              <Text>{question.order}</Text>
+                              <Text>{question.order + questionBefore()}</Text>
                               <Text>{question.content}</Text>
                             </Group>
 

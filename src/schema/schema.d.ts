@@ -1517,6 +1517,7 @@ export interface paths {
                         id: string;
                         title?: string;
                         dueDate?: unknown;
+                        status?: "ASSIGNED" | "SUBMITTED" | "REVIEWED";
                     };
                 };
             };
@@ -2220,7 +2221,7 @@ export interface components {
         };
         /** ListeningExercise */
         ListeningExercise: {
-            file: {
+            file?: {
                 url: string;
                 key: string;
                 fileName: string;
@@ -2467,6 +2468,34 @@ export interface components {
         CreateSubmissionInput: {
             assignmentId: string;
             content: unknown;
+        };
+        /** SubmissionContent */
+        SubmissionContent: {
+            value: string;
+        } | {
+            tasks: {
+                order: number;
+                questions: {
+                    order: number;
+                    /** @default null */
+                    answer: string | null;
+                }[];
+            }[];
+        };
+        /** WritingSubmissionContent */
+        WritingSubmissionContent: {
+            value: string;
+        };
+        /** ReadingSubmissionContent */
+        ReadingSubmissionContent: {
+            tasks: {
+                order: number;
+                questions: {
+                    order: number;
+                    /** @default null */
+                    answer: string | null;
+                }[];
+            }[];
         };
     };
     responses: never;

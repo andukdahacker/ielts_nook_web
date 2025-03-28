@@ -2,6 +2,7 @@ import { Center, Loader } from "@mantine/core";
 import { useParams } from "react-router";
 import WritingExerciseAssignmentView from "../exercise/components/writing/writing_exercise_assignment.view";
 import useGetAssignment from "./hooks/use_get_assignment";
+import ReadingExerciseAssignmentView from "../exercise/components/reading/reading_exercise_assignment.view";
 
 function DoAssignmentView() {
   const { id } = useParams();
@@ -28,7 +29,16 @@ function DoAssignmentView() {
       );
     }
     case "LISTENING":
-    case "READING":
+    case "READING": {
+      return (
+        <>
+          <ReadingExerciseAssignmentView
+            exercise={data.exercise}
+            assignment={data.assignment}
+          />
+        </>
+      );
+    }
     case "SPEAKING":
       return <>{data.exercise.type}</>;
   }

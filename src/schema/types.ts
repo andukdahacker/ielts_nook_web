@@ -9,6 +9,12 @@ export type ExerciseType = components["schemas"]["ExerciseType"];
 export type Assignment = components["schemas"]["Assignment"];
 export type Submission = components["schemas"]["Submission"];
 
+export type SubmissionContent = components["schemas"]["SubmissionContent"];
+export type ReadingSubmissionContent =
+  components["schemas"]["ReadingSubmissionContent"];
+export type WritingSubmissionContent =
+  components["schemas"]["WritingSubmissionContent"];
+
 export type ReadingExercise = components["schemas"]["ReadingExercise"];
 export type ReadingExerciseType = ReadingExercise["tasks"][0]["type"];
 export type ReadingMultipleChoiceTask =

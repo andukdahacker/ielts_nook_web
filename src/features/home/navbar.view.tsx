@@ -8,7 +8,7 @@ import {
   IconUsers,
   IconUsersGroup,
 } from "@tabler/icons-react";
-import { useContext, useEffect, useState } from "react";
+import { Fragment, useContext, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 import { UserRole } from "../../schema/types";
 import AuthContext from "../auth/auth.context";
@@ -65,7 +65,7 @@ function NavBarView() {
 
   const items = navs.map((nav) => {
     if (!nav.role.includes(role!)) {
-      return <></>;
+      return <Fragment key={nav.label}></Fragment>;
     }
 
     return (
