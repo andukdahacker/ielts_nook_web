@@ -20,6 +20,7 @@ import {
   ReadingExercise,
   ReadingMultipleChoiceTask,
   ReadingSubmissionContent,
+  Submission,
 } from "../../../../schema/types";
 import Link from "@tiptap/extension-link";
 import { IconCheck } from "@tabler/icons-react";
@@ -27,15 +28,18 @@ import { useForm } from "@mantine/form";
 import { useEffect } from "react";
 import useCreateSubmission from "../../../submission/hooks/use_create_submission";
 import { notifications } from "@mantine/notifications";
+import { useNavigate } from "react-router";
 
 interface ReadingExerciseAssignmentViewProps {
   exercise: Exercise;
   assignment: Assignment;
+  submission: Submission | null;
 }
 
 function ReadingExerciseAssignmentView({
   exercise,
   assignment,
+  submission,
 }: ReadingExerciseAssignmentViewProps) {
   const readingExercise = exercise.content as ReadingExercise;
   const tasks = readingExercise.tasks;
@@ -58,11 +62,24 @@ function ReadingExerciseAssignmentView({
   });
 
   useEffect(() => {
-    form.setInitialValues({
-      tasks: tasks.map((task) => {
+    form.setValues({
+      tasks: tasks.map((task, taskIndex) => {
         return {
           order: task.order,
-          questions: task.questions.map((question) => {
+          questions: task.questions.map((question, questionIndex) => {
+            if (submission) {
+              const submissionContent =
+                submission.content as ReadingSubmissionContent;
+
+              const answer =
+                submissionContent.tasks[taskIndex].questions[questionIndex]
+                  .answer;
+
+              return {
+                order: question.order,
+                answer,
+              };
+            }
             return {
               order: question.order,
               answer: null,
@@ -71,11 +88,19 @@ function ReadingExerciseAssignmentView({
         };
       }),
     });
+  }, []);
+
+  const navigate = useNavigate();
+
+  const { mutateAsync } = useCreateSubmission({
+    onSuccess: () => {
+      navigate("/assignment");
+    },
   });
 
-  const { mutateAsync } = useCreateSubmission();
-
   const handleSubmit = async (values: ReadingSubmissionContent) => {
+    if (submission) return;
+
     const id = notifications.show({
       message: "Submitting...",
       autoClose: false,
@@ -93,23 +118,26 @@ function ReadingExerciseAssignmentView({
 
   return (
     <Box h={"calc(100vh - 65px - 65px)"}>
-      <Allotment>
-        <Allotment.Pane>
-          <ScrollArea h={"calc(100vh - 65px - 65px)"}>
-            <Stack>
-              <Center>
-                <Title order={3}>{title}</Title>
-              </Center>
-              <Center>
-                <EditorContent editor={editor} />
-              </Center>
-            </Stack>
-          </ScrollArea>
-        </Allotment.Pane>
-        <Allotment.Pane>
-          <ScrollArea h={"100%"}>
-            <Stack p={"md"}>
-              <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
+      <form
+        style={{ height: "100%" }}
+        onSubmit={form.onSubmit((values) => handleSubmit(values))}
+      >
+        <Allotment>
+          <Allotment.Pane>
+            <ScrollArea h={"calc(100vh - 65px - 65px)"}>
+              <Stack>
+                <Center>
+                  <Title order={3}>{title}</Title>
+                </Center>
+                <Center>
+                  <EditorContent editor={editor} />
+                </Center>
+              </Stack>
+            </ScrollArea>
+          </Allotment.Pane>
+          <Allotment.Pane>
+            <ScrollArea h={"100%"}>
+              <Stack p={"md"}>
                 {tasks.map((e, taskIndex) => {
                   switch (e.type) {
                     case "Multiple choice": {
@@ -131,53 +159,78 @@ function ReadingExerciseAssignmentView({
 
                       return (
                         <Stack key={`task-${task.type}-${task.order}`}>
-                          {task.questions.map((question, questionIndex) => (
-                            <Stack
-                              key={`task-${task.type}-question${question.order}`}
-                            >
-                              <Group>
-                                <Text>{question.order + questionBefore()}</Text>
-                                <Text>{question.content}</Text>
-                              </Group>
+                          {task.questions.map((question, questionIndex) => {
+                            const submissionContent =
+                              submission?.content as ReadingSubmissionContent | null;
 
-                              <Radio.Group>
-                                <Stack>
-                                  {question.options.map((option) => {
-                                    return (
-                                      <Group
-                                        key={`task-${task.type}-question${question.order}-option${option.order}`}
-                                      >
-                                        <Radio
-                                          label={option.content}
-                                          value={option.value}
-                                          onChange={() => {
-                                            const currentValues = [
-                                              ...form.getValues().tasks,
-                                            ];
+                            const answer =
+                              submissionContent?.tasks[taskIndex].questions[
+                                questionIndex
+                              ].answer;
 
-                                            const targetTask =
-                                              currentValues[taskIndex];
+                            return (
+                              <Stack
+                                key={`task-${task.type}-question${question.order}`}
+                              >
+                                <Group>
+                                  <Text>
+                                    {question.order + questionBefore()}
+                                  </Text>
+                                  <Text>{question.content}</Text>
+                                </Group>
 
-                                            const targetQuestion =
-                                              targetTask.questions[
-                                                questionIndex
+                                <Radio.Group value={answer}>
+                                  <Stack>
+                                    {question.options.map((option) => {
+                                      if (submission) {
+                                        return (
+                                          <Group
+                                            key={`task-${task.type}-question${question.order}-option${option.order}`}
+                                          >
+                                            <Radio
+                                              label={option.content}
+                                              value={option.value}
+                                            />
+                                          </Group>
+                                        );
+                                      }
+
+                                      return (
+                                        <Group
+                                          key={`task-${task.type}-question${question.order}-option${option.order}`}
+                                        >
+                                          <Radio
+                                            label={option.content}
+                                            value={option.value}
+                                            onChange={() => {
+                                              const currentValues = [
+                                                ...form.getValues().tasks,
                                               ];
 
-                                            targetQuestion.answer =
-                                              option.value;
-                                            form.setFieldValue(
-                                              "tasks",
-                                              currentValues,
-                                            );
-                                          }}
-                                        />
-                                      </Group>
-                                    );
-                                  })}
-                                </Stack>
-                              </Radio.Group>
-                            </Stack>
-                          ))}
+                                              const targetTask =
+                                                currentValues[taskIndex];
+
+                                              const targetQuestion =
+                                                targetTask.questions[
+                                                  questionIndex
+                                                ];
+
+                                              targetQuestion.answer =
+                                                option.value;
+                                              form.setFieldValue(
+                                                "tasks",
+                                                currentValues,
+                                              );
+                                            }}
+                                          />
+                                        </Group>
+                                      );
+                                    })}
+                                  </Stack>
+                                </Radio.Group>
+                              </Stack>
+                            );
+                          })}
                         </Stack>
                       );
                     }
@@ -186,16 +239,18 @@ function ReadingExerciseAssignmentView({
                     }
                   }
                 })}
-              </form>
-            </Stack>
-          </ScrollArea>
-        </Allotment.Pane>
-      </Allotment>
-      <Flex h={"65px"} direction={"row"} justify={"end"} align={"center"}>
-        <ActionIcon size={"xl"} type="submit">
-          <IconCheck />
-        </ActionIcon>
-      </Flex>
+              </Stack>
+            </ScrollArea>
+          </Allotment.Pane>
+        </Allotment>
+        <Flex h={"65px"} direction={"row"} justify={"end"} align={"center"}>
+          {!submission && (
+            <ActionIcon size={"xl"} type="submit">
+              <IconCheck />
+            </ActionIcon>
+          )}
+        </Flex>
+      </form>
     </Box>
   );
 }

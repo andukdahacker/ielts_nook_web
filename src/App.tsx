@@ -21,6 +21,7 @@ import HomeView from "./features/home/home.view";
 import EditUserModal from "./features/users/edit_user.modal";
 import UserDetailView from "./features/users/user_detail.view";
 import UsersView from "./features/users/users.view";
+import ViewAssignmentView from "./features/assignment/view_asignment.view";
 
 const modals = {
   editUser: EditUserModal,
@@ -75,6 +76,10 @@ function App() {
                   <Route
                     path="/assignment/:id/do"
                     element={<DoAssignmentView />}
+                  />
+                  <Route
+                    path="/assignment/:id/view"
+                    element={<ViewAssignmentView />}
                   />
                 </Route>
 

@@ -10,4 +10,4 @@ function useGetAssignment(id: string) {
   return query;
 }
 
-export default useGetAssignment
+export default useGetAssignment;

@@ -15,6 +15,7 @@ import {
 } from "@mantine/core";
 import {
   IconDotsVertical,
+  IconEye,
   IconFilter,
   IconFolderRoot,
   IconReload,
@@ -118,14 +119,31 @@ function StudentAssignmentView() {
                               </ActionIcon>
                             </Menu.Target>
                             <Menu.Dropdown>
-                              <Menu.Item
-                                leftSection={<IconFolderRoot size={14} />}
-                                onClick={() => {
-                                  navigate(`/assignment/${e.assignment.id}/do`);
-                                }}
-                              >
-                                Do assignment
-                              </Menu.Item>
+                              {e.assignment.status == "ASSIGNED" && (
+                                <Menu.Item
+                                  leftSection={<IconFolderRoot size={14} />}
+                                  onClick={() => {
+                                    navigate(
+                                      `/assignment/${e.assignment.id}/do`,
+                                    );
+                                  }}
+                                >
+                                  Do assignment
+                                </Menu.Item>
+                              )}
+                              {(e.assignment.status == "SUBMITTED" ||
+                                e.assignment.status == "REVIEWED") && (
+                                <Menu.Item
+                                  leftSection={<IconEye size={14} />}
+                                  onClick={() => {
+                                    navigate(
+                                      `/assignment/${e.assignment.id}/view`,
+                                    );
+                                  }}
+                                >
+                                  View
+                                </Menu.Item>
+                              )}
                             </Menu.Dropdown>
                           </Menu>
                         </Table.Td>

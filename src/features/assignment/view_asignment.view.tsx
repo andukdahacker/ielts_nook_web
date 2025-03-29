@@ -1,11 +1,10 @@
-import { Center, Loader } from "@mantine/core";
-import { useNavigate, useParams } from "react-router";
-import WritingExerciseAssignmentView from "../exercise/components/writing/writing_exercise_assignment.view";
-import useGetAssignment from "./hooks/use_get_assignment";
-import ReadingExerciseAssignmentView from "../exercise/components/reading/reading_exercise_assignment.view";
 import { useEffect } from "react";
+import { useParams, useNavigate } from "react-router";
+import useGetAssignment from "./hooks/use_get_assignment";
+import { Center, Loader } from "@mantine/core";
+import ReadingExerciseAssignmentView from "../exercise/components/reading/reading_exercise_assignment.view";
 
-function DoAssignmentView() {
+function ViewAssignmentView() {
   const { id } = useParams();
 
   const { data, status, error } = useGetAssignment(id as string);
@@ -14,8 +13,8 @@ function DoAssignmentView() {
 
   useEffect(() => {
     if (!data) return;
-    if (data.assignment.status != "ASSIGNED") {
-      navigate(`/assignment/${data.assignment.id}/view`);
+    if (data.assignment.status == "ASSIGNED") {
+      navigate(`/assignment/${data.assignment.id}/do`);
     }
   }, [data, navigate]);
 
@@ -29,14 +28,7 @@ function DoAssignmentView() {
 
   switch (data.exercise.type) {
     case "WRITING": {
-      return (
-        <>
-          <WritingExerciseAssignmentView
-            exercise={data.exercise}
-            assignment={data.assignment}
-          />
-        </>
-      );
+      return <></>;
     }
     case "LISTENING":
     case "READING": {
@@ -55,4 +47,4 @@ function DoAssignmentView() {
   }
 }
 
-export default DoAssignmentView;
+export default ViewAssignmentView;
