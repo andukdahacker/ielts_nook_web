@@ -53,6 +53,7 @@ export type GetAssignmentsByUserInput =
   components["schemas"]["GetAssignmentByUserInput"];
 export type CreateSubmissionInput =
   components["schemas"]["CreateSubmissionInput"];
+export type GetClassListByUserInput = components["schemas"]["GetClassListByUserInput"];
 
 export type CreateExerciseResponse =
   components["schemas"]["CreateExerciseResponseSchema"];
