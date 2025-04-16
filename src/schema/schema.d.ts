@@ -413,6 +413,74 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/user/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Get a user */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                id: string;
+                                email: string;
+                                /** @default null */
+                                username: string | null;
+                                /** @default null */
+                                firstName: string | null;
+                                /** @default null */
+                                lastName: string | null;
+                                centerId: string;
+                                role: "ADMIN" | "TEACHER" | "STUDENT";
+                                /** @default null */
+                                phoneNumber: string | null;
+                                createdAt: unknown;
+                                updatedAt: unknown;
+                            };
+                            message: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                            message: string;
+                        };
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/user/{userId}": {
         parameters: {
             query?: never;
@@ -1047,6 +1115,116 @@ export interface paths {
                                     hasNextPage: boolean;
                                     cursor?: string;
                                 };
+                            };
+                            message: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                            message: string;
+                        };
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/class/{classId}/member/{userId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Get class member details */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    userId: string;
+                    classId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                /** ClassMember */
+                                classMember: {
+                                    classId: string;
+                                    userId: string;
+                                };
+                                user: {
+                                    id: string;
+                                    email: string;
+                                    /** @default null */
+                                    username: string | null;
+                                    /** @default null */
+                                    firstName: string | null;
+                                    /** @default null */
+                                    lastName: string | null;
+                                    centerId: string;
+                                    role: "ADMIN" | "TEACHER" | "STUDENT";
+                                    /** @default null */
+                                    phoneNumber: string | null;
+                                    createdAt: unknown;
+                                    updatedAt: unknown;
+                                };
+                                assignments: {
+                                    assignment: {
+                                        id: string;
+                                        title: string;
+                                        /** @default null */
+                                        dueDate: unknown | null;
+                                        classMemberClassId: string;
+                                        classMemberUserId: string;
+                                        exerciseId: string;
+                                        status: "ASSIGNED" | "SUBMITTED" | "REVIEWED";
+                                        createdAt: unknown;
+                                        updatedAt: unknown;
+                                    };
+                                    /** @default null */
+                                    submission: {
+                                        id: string;
+                                        assignmentId: string;
+                                        content: unknown;
+                                        grade: unknown;
+                                        feedback: unknown;
+                                        createdAt: unknown;
+                                        updatedAt: unknown;
+                                    } | null;
+                                    exercise: {
+                                        id: string;
+                                        name: string;
+                                        type: "READING" | "LISTENING" | "WRITING" | "SPEAKING";
+                                        content: unknown;
+                                        /** @default null */
+                                        centerId: string | null;
+                                        createdAt: unknown;
+                                        updatedAt: unknown;
+                                    };
+                                }[];
                             };
                             message: string;
                         };
@@ -2380,6 +2558,11 @@ export interface components {
             cursor?: string;
             searchString?: string;
         };
+        /** GetClassMemberInput */
+        GetClassMemberInput: {
+            userId: string;
+            classId: string;
+        };
         /** ReadingExercise */
         ReadingExercise: {
             title: string;
@@ -2774,6 +2957,15 @@ export interface components {
                     answer: string | null;
                 }[];
             }[];
+        } | {
+            tasks: {
+                order: number;
+                questions: {
+                    order: number;
+                    /** @default null */
+                    answer: string | null;
+                }[];
+            }[];
         };
         /** WritingSubmissionContent */
         WritingSubmissionContent: {
@@ -2781,6 +2973,17 @@ export interface components {
         };
         /** ReadingSubmissionContent */
         ReadingSubmissionContent: {
+            tasks: {
+                order: number;
+                questions: {
+                    order: number;
+                    /** @default null */
+                    answer: string | null;
+                }[];
+            }[];
+        };
+        /** ListeningSubmissionContent */
+        ListeningSubmissionContent: {
             tasks: {
                 order: number;
                 questions: {

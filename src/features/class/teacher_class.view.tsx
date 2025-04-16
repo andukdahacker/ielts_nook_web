@@ -20,9 +20,6 @@ import useGetClassListByUser from './hooks/use_get_class_list_by_user';
 
 function TeacherClassView() {
     const { user } = useContext(AuthContext);
-    if (!user) {
-        return <>Forbidden</>;
-    }
 
     const [searchString, setSearchString] = useState('');
     const debouncedSearchString = useDebounce(searchString, 500);
