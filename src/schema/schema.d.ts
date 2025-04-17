@@ -2993,6 +2993,36 @@ export interface components {
                 }[];
             }[];
         };
+        /** SubmissionGradeSchema */
+        SubmissionGradeSchema: {
+            score: number;
+            total: number;
+        } | {
+            score: number;
+            total: number;
+        } | {
+            taskAchievement: number;
+            coherenceAndCohesion: number;
+            lexicalResource: number;
+            grammaticalRangeAndAccuracy: number;
+        };
+        /** ReadingSubmissionGrade */
+        ReadingSubmissionGrade: {
+            score: number;
+            total: number;
+        };
+        /** ListeningSubmissionGrade */
+        ListeningSubmissionGrade: {
+            score: number;
+            total: number;
+        };
+        /** WritingSubmissionGrade */
+        WritingSubmissionGrade: {
+            taskAchievement: number;
+            coherenceAndCohesion: number;
+            lexicalResource: number;
+            grammaticalRangeAndAccuracy: number;
+        };
     };
     responses: never;
     parameters: never;

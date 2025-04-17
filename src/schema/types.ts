@@ -14,6 +14,11 @@ export type ReadingSubmissionContent = components['schemas']['ReadingSubmissionC
 export type WritingSubmissionContent = components['schemas']['WritingSubmissionContent'];
 export type ListeningSubmissionContent = components['schemas']['ListeningSubmissionContent'];
 
+export type SubmissionGrade = components['schemas']['SubmissionGradeSchema'];
+export type ReadingSubmissionGrade = components['schemas']['ReadingSubmissionGrade'];
+export type ListeningSubmissionGrade = components['schemas']['ListeningSubmissionGrade'];
+export type WritingSubmissionGrade = components['schemas']['WritingSubmissionGrade'];
+
 export type ReadingExercise = components['schemas']['ReadingExercise'];
 export type ReadingExerciseType = ReadingExercise['tasks'][0]['type'];
 export type ReadingMultipleChoiceTask = components['schemas']['ReadingMultipleChoiceTask'];

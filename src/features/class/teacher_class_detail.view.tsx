@@ -29,7 +29,7 @@ function TeacherClassDetailView() {
 
             <Stack>
                 <Title order={3}>Class members</Title>
-                <Table stickyHeader withColumnBorders withTableBorder>
+                <Table stickyHeader withColumnBorders withTableBorder stickyHeaderOffset={65}>
                     <Table.Thead>
                         <Table.Tr>
                             <Table.Th>Username</Table.Th>
@@ -60,12 +60,16 @@ function TeacherClassDetailView() {
                                                         <IconDotsVertical />
                                                     </ActionIcon>
                                                 </Menu.Target>
-                                                <Menu.Dropdown
-                                                    onClick={() => {
-                                                        navigate(`/class/${data.class.id}/member/${member.user.id}`);
-                                                    }}
-                                                >
-                                                    <Menu.Item>View</Menu.Item>
+                                                <Menu.Dropdown>
+                                                    <Menu.Item
+                                                        onClick={() => {
+                                                            navigate(
+                                                                `/class/${data.class.id}/member/${member.user.id}`,
+                                                            );
+                                                        }}
+                                                    >
+                                                        View
+                                                    </Menu.Item>
                                                 </Menu.Dropdown>
                                             </Menu>
                                         </Table.Td>
