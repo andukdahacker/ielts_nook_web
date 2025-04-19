@@ -20,6 +20,7 @@ import ExerciseEditView from './features/exercise/exercise_edit.view';
 import HomeLayout from './features/home/home.layout';
 import HomeProvider from './features/home/home.provider';
 import HomeView from './features/home/home.view';
+import ReviewView from './features/review/review.view';
 import EditUserModal from './features/users/edit_user.modal';
 import UserDetailView from './features/users/user_detail.view';
 import UsersView from './features/users/users.view';
@@ -65,6 +66,7 @@ function App() {
                                     <Route path="/assignment" element={<StudentAssignmentView />} />
                                     <Route path="/assignment/:id/do" element={<DoAssignmentView />} />
                                     <Route path="/assignment/:id/view" element={<ViewAssignmentView />} />
+                                    <Route path="/assignment/:id/review" element={<ReviewView />} />
                                 </Route>
 
                                 <Route element={<AuthLayout />}>
