@@ -1,11 +1,17 @@
-import { ActionIcon, ActionIconGroup, Box, Flex, Tooltip } from '@mantine/core';
+import { ActionIcon, ActionIconGroup, Flex, Paper, Stack, Text, Textarea, Tooltip } from '@mantine/core';
 import { RichTextEditor, RichTextEditorContent, RichTextEditorControlsGroup } from '@mantine/tiptap';
-import { IconEdit, IconMessagePlus } from '@tabler/icons-react';
+import { IconMessagePlus, IconTrash } from '@tabler/icons-react';
 import Link from '@tiptap/extension-link';
 import TextAlign from '@tiptap/extension-text-align';
 import { BubbleMenu, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
-import { Assignment, Exercise, Submission, WritingSubmissionContent } from '../../schema/types';
+import dayjs from 'dayjs';
+import { useContext, useState } from 'react';
+import * as uuidV4 from 'uuid';
+import { Comment as CommentExtention } from '../../common/components/editor/comment/comment';
+import '../../common/components/editor/comment/comment.css';
+import { Assignment, Comment, Exercise, Submission, WritingSubmissionContent } from '../../schema/types';
+import AuthContext from '../auth/auth.context';
 
 interface WritingingReviewViewProps {
     submission: Submission;
@@ -14,12 +20,14 @@ interface WritingingReviewViewProps {
 }
 
 function WritingReviewView({ submission, exercise, assignment }: WritingingReviewViewProps) {
+    const { user } = useContext(AuthContext);
     const content = submission.content as WritingSubmissionContent;
     const value = content.value;
     const editor = useEditor({
         extensions: [
             StarterKit,
             Link,
+            CommentExtention,
             TextAlign.configure({
                 types: ['heading', 'paragraph'],
             }),
@@ -27,6 +35,45 @@ function WritingReviewView({ submission, exercise, assignment }: WritingingRevie
         content: value,
         editable: false,
     });
+
+    const [comments, setComments] = useState<Comment[]>([]);
+
+    const handleAddComment = () => {
+        const id = uuidV4.v4();
+
+        if (!editor) return;
+
+        editor.commands.addComment(id);
+
+        const selection = editor.state.selection;
+
+        const from = selection.from;
+
+        const to = selection.to;
+
+        const selectedText = editor.state.doc.textBetween(from, to, ' ') ?? '';
+
+        const currentComments = [...comments];
+
+        currentComments.push({
+            id,
+            selectedText: selectedText,
+            from,
+            to,
+            author: user?.id ?? '',
+            comment: '',
+            createdAt: dayjs().toISOString(),
+            updatedAt: dayjs().toISOString(),
+        });
+
+        setComments(currentComments);
+    };
+
+    const handleRemoveComment = (id: string) => {
+        if (!editor) return;
+
+        editor.commands.removeComment();
+    };
 
     return (
         <>
@@ -39,15 +86,10 @@ function WritingReviewView({ submission, exercise, assignment }: WritingingRevie
                                     <Tooltip label="Add comment">
                                         <ActionIcon
                                             onClick={() => {
-                                                console.log('selection', editor.state.selection);
+                                                handleAddComment();
                                             }}
                                         >
                                             <IconMessagePlus />
-                                        </ActionIcon>
-                                    </Tooltip>
-                                    <Tooltip label="Suggest edits">
-                                        <ActionIcon>
-                                            <IconEdit />
                                         </ActionIcon>
                                     </Tooltip>
                                 </ActionIconGroup>
@@ -56,7 +98,23 @@ function WritingReviewView({ submission, exercise, assignment }: WritingingRevie
                     )}
                     <RichTextEditorContent />
                 </RichTextEditor>
-                <Box flex={1}></Box>
+                <Stack flex={1} gap={'md'}>
+                    {comments.map(comment => {
+                        return (
+                            <Paper key={comment.id} withBorder radius={'md'} m={'md'} p={'md'}>
+                                <Stack gap={'md'}>
+                                    <Flex direction={'row'} justify={'end'}>
+                                        <ActionIcon color="red" onClick={() => {}}>
+                                            <IconTrash />
+                                        </ActionIcon>
+                                    </Flex>
+                                    <Text>{comment.selectedText}</Text>
+                                    <Textarea />
+                                </Stack>
+                            </Paper>
+                        );
+                    })}
+                </Stack>
             </Flex>
         </>
     );

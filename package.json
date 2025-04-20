@@ -34,7 +34,8 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-resizable-panels": "^0.0.63",
-    "react-router": "^7.1.1"
+    "react-router": "^7.1.1",
+    "uuid": "^11.1.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.17.0",
