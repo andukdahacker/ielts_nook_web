@@ -6,10 +6,12 @@ import TextAlign from '@tiptap/extension-text-align';
 import { BubbleMenu, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import dayjs from 'dayjs';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import * as uuidV4 from 'uuid';
 import { Comment as CommentExtention } from '../../common/components/editor/comment/comment';
 import '../../common/components/editor/comment/comment.css';
+import { CommentClickPlugin } from '../../common/components/editor/comment/comment_click.plugin';
+import { CommentHighlightPlugin } from '../../common/components/editor/comment/comment_highlight.plugin';
 import { Assignment, Comment, Exercise, Submission, WritingSubmissionContent } from '../../schema/types';
 import AuthContext from '../auth/auth.context';
 
@@ -34,9 +36,17 @@ function WritingReviewView({ submission, exercise, assignment }: WritingingRevie
         ],
         content: value,
         editable: false,
+        onCreate: ({ editor }) => {
+            editor.registerPlugin(
+                CommentClickPlugin(id => {
+                    setSelectedComment(id);
+                }),
+            );
+        },
     });
 
     const [comments, setComments] = useState<Comment[]>([]);
+    const [selectedComment, setSelectedComment] = useState<string | null>(null);
 
     const handleAddComment = () => {
         const id = uuidV4.v4();
@@ -70,10 +80,21 @@ function WritingReviewView({ submission, exercise, assignment }: WritingingRevie
     };
 
     const handleRemoveComment = (id: string) => {
-        if (!editor) return;
+        editor?.commands.removeComment(id);
 
-        editor.commands.removeComment();
+        const currentComments = [...comments];
+
+        const filtered = currentComments.filter(e => e.id != id);
+
+        setComments(filtered);
     };
+
+    useEffect(() => {
+        if (!editor) return;
+        if (!selectedComment) return;
+
+        editor.registerPlugin(CommentHighlightPlugin(selectedComment));
+    }, [editor, selectedComment]);
 
     return (
         <>
@@ -104,7 +125,12 @@ function WritingReviewView({ submission, exercise, assignment }: WritingingRevie
                             <Paper key={comment.id} withBorder radius={'md'} m={'md'} p={'md'}>
                                 <Stack gap={'md'}>
                                     <Flex direction={'row'} justify={'end'}>
-                                        <ActionIcon color="red" onClick={() => {}}>
+                                        <ActionIcon
+                                            color="red"
+                                            onClick={() => {
+                                                handleRemoveComment(comment.id);
+                                            }}
+                                        >
                                             <IconTrash />
                                         </ActionIcon>
                                     </Flex>
