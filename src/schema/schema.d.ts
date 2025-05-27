@@ -2246,7 +2246,84 @@ export interface paths {
             cookie?: never;
         };
         get?: never;
-        put?: never;
+        /** @description Update submission */
+        put: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        id: string;
+                        content?: unknown;
+                        grade?: unknown;
+                        feedback?: unknown;
+                        isReviewed?: boolean;
+                    };
+                };
+            };
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                submission: {
+                                    id: string;
+                                    assignmentId: string;
+                                    content: unknown;
+                                    grade: unknown;
+                                    feedback: unknown;
+                                    createdAt: unknown;
+                                    updatedAt: unknown;
+                                };
+                                exercise: {
+                                    id: string;
+                                    name: string;
+                                    type: "READING" | "LISTENING" | "WRITING" | "SPEAKING";
+                                    content: unknown;
+                                    /** @default null */
+                                    centerId: string | null;
+                                    createdAt: unknown;
+                                    updatedAt: unknown;
+                                };
+                                assignment: {
+                                    id: string;
+                                    title: string;
+                                    /** @default null */
+                                    dueDate: unknown | null;
+                                    classMemberClassId: string;
+                                    classMemberUserId: string;
+                                    exerciseId: string;
+                                    status: "ASSIGNED" | "SUBMITTED" | "REVIEWED";
+                                    createdAt: unknown;
+                                    updatedAt: unknown;
+                                };
+                            };
+                            message: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: string;
+                            message: string;
+                        };
+                    };
+                };
+            };
+        };
         /** @description Create submission */
         post: {
             parameters: {
@@ -2947,7 +3024,7 @@ export interface components {
         };
         /** SubmissionContent */
         SubmissionContent: {
-            value: string;
+            value: unknown;
         } | {
             tasks: {
                 order: number;
@@ -2969,7 +3046,7 @@ export interface components {
         };
         /** WritingSubmissionContent */
         WritingSubmissionContent: {
-            value: string;
+            value: unknown;
         };
         /** ReadingSubmissionContent */
         ReadingSubmissionContent: {
@@ -3002,9 +3079,13 @@ export interface components {
             total: number;
         } | {
             taskAchievement: number;
+            taskAchievementComment: string;
             coherenceAndCohesion: number;
+            coherenceAndCohesionComment: string;
             lexicalResource: number;
+            lexicalResourceComment: string;
             grammaticalRangeAndAccuracy: number;
+            grammaticalRangeAndAccuracyComment: string;
         };
         /** ReadingSubmissionGrade */
         ReadingSubmissionGrade: {
@@ -3019,9 +3100,70 @@ export interface components {
         /** WritingSubmissionGrade */
         WritingSubmissionGrade: {
             taskAchievement: number;
+            taskAchievementComment: string;
             coherenceAndCohesion: number;
+            coherenceAndCohesionComment: string;
             lexicalResource: number;
+            lexicalResourceComment: string;
             grammaticalRangeAndAccuracy: number;
+            grammaticalRangeAndAccuracyComment: string;
+        };
+        /** SubmissionFeedback */
+        SubmissionFeedback: {
+            comments: {
+                id: string;
+                selectedText: string;
+                from: number;
+                to: number;
+                comment: string;
+                author: string;
+                createdAt: string;
+                updatedAt: string;
+            }[];
+        } | {
+            feedback: string;
+        } | {
+            feedback: string;
+        };
+        /** WritingSubmissionFeedback */
+        WritingSubmissionFeedback: {
+            comments: {
+                id: string;
+                selectedText: string;
+                from: number;
+                to: number;
+                comment: string;
+                author: string;
+                createdAt: string;
+                updatedAt: string;
+            }[];
+        };
+        /** WritingComment */
+        WritingComment: {
+            id: string;
+            selectedText: string;
+            from: number;
+            to: number;
+            comment: string;
+            author: string;
+            createdAt: string;
+            updatedAt: string;
+        };
+        /** ReadingSubmissionFeedback */
+        ReadingSubmissionFeedback: {
+            feedback: string;
+        };
+        /** ListeningSubmissionFeedback */
+        ListeningSubmissionFeedback: {
+            feedback: string;
+        };
+        /** UpdateSubmissionInput */
+        UpdateSubmissionInput: {
+            id: string;
+            content?: unknown;
+            grade?: unknown;
+            feedback?: unknown;
+            isReviewed?: boolean;
         };
     };
     responses: never;

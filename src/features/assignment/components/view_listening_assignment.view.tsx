@@ -1,6 +1,4 @@
-import { Button, Center, Divider, Flex, Group, Radio, ScrollArea, Stack, Text, Textarea } from '@mantine/core';
-import { useForm } from '@mantine/form';
-import { useNavigate } from 'react-router';
+import { Divider, Flex, Group, Radio, ScrollArea, Stack, Text } from '@mantine/core';
 import {
     Assignment,
     Exercise,
@@ -10,16 +8,15 @@ import {
     ListeningSubmissionFeedback,
     ListeningSubmissionGrade,
     Submission,
-} from '../../schema/types';
-import useUpdateSubmission from '../submission/hooks/use_update_submission';
+} from '../../../schema/types';
 
-interface ListeningReviewViewProps {
-    submission: Submission;
+interface ViewListeningAssignmentProps {
     exercise: Exercise;
     assignment: Assignment;
+    submission: Submission;
 }
 
-function ListeningReviewView({ submission, exercise, assignment }: ListeningReviewViewProps) {
+function ViewListentingAssignment({ exercise, assignment, submission }: ViewListeningAssignmentProps) {
     const content = exercise.content as ListeningExercise;
     const tasks = content.tasks;
 
@@ -29,17 +26,6 @@ function ListeningReviewView({ submission, exercise, assignment }: ListeningRevi
     const submissionGrade = submission.grade as ListeningSubmissionGrade;
 
     const submissionFeedback = submission.feedback as ListeningSubmissionFeedback | null;
-
-    const form = useForm<ListeningSubmissionFeedback>({
-        mode: 'uncontrolled',
-        initialValues: {
-            feedback: submissionFeedback?.feedback ?? '',
-        },
-    });
-
-    const { mutateAsync } = useUpdateSubmission();
-
-    const navigate = useNavigate();
 
     return (
         <>
@@ -126,37 +112,18 @@ function ListeningReviewView({ submission, exercise, assignment }: ListeningRevi
                 </ScrollArea>
                 <Divider orientation="vertical" h={'calc(100vh - 65px)'} />
                 <ScrollArea flex={1} h={'calc(100vh - 65px)'}>
-                    <form
-                        onSubmit={form.onSubmit(async values => {
-                            await mutateAsync({
-                                id: submission.id,
-                                feedback: {
-                                    feedback: values.feedback,
-                                },
-                                isReviewed: true,
-                            });
-                            navigate(`/class/${assignment.classMemberClassId}/member/${assignment.classMemberUserId}`);
-                        })}
-                    >
-                        <Stack p={'md'}>
-                            <Text>
-                                {submissionGrade.score}/{submissionGrade.total}
-                            </Text>
+                    <Stack p={'md'}>
+                        <Text>
+                            {submissionGrade.score}/{submissionGrade.total}
+                        </Text>
 
-                            <Textarea
-                                label={'Feedback'}
-                                key={form.key('feedback')}
-                                {...form.getInputProps('feedback')}
-                            />
-                        </Stack>
-                        <Center>
-                            <Button type="submit">Submit</Button>
-                        </Center>
-                    </form>
+                        <Text>Feedback</Text>
+                        <Text>{submissionFeedback?.feedback}</Text>
+                    </Stack>
                 </ScrollArea>
             </Flex>
         </>
     );
 }
 
-export default ListeningReviewView;
+export default ViewListentingAssignment;

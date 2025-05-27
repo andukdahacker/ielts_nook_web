@@ -1,13 +1,18 @@
 import { Plugin, PluginKey } from 'prosemirror-state';
 import { Decoration, DecorationSet } from 'prosemirror-view';
 
-export const CommentHighlightPlugin = (id: string) =>
+export const CommentHighlightPlugin = (getId: () => string | null) =>
     new Plugin({
         key: new PluginKey('comment-highlight'),
         state: {
             init: () => DecorationSet.empty,
             apply(tr) {
-                console.log('id', id);
+                const id = getId();
+
+                if (!id) {
+                    return;
+                }
+
                 const decos: Decoration[] = [];
 
                 tr.doc.descendants((node, pos) => {

@@ -19,16 +19,12 @@ export type ReadingSubmissionGrade = components['schemas']['ReadingSubmissionGra
 export type ListeningSubmissionGrade = components['schemas']['ListeningSubmissionGrade'];
 export type WritingSubmissionGrade = components['schemas']['WritingSubmissionGrade'];
 
-export type Comment = {
-    id: string;
-    selectedText: string;
-    from: number;
-    to: number;
-    comment: string;
-    author: string;
-    createdAt: string;
-    updatedAt: string;
-};
+export type WritingComment = components['schemas']['WritingComment'];
+
+export type SubmissionFeedback = components['schemas']['SubmissionFeedback'];
+export type WritingSubmissionFeedback = components['schemas']['WritingSubmissionFeedback'];
+export type ReadingSubmissionFeedback = components['schemas']['ReadingSubmissionFeedback'];
+export type ListeningSubmissionFeedback = components['schemas']['ListeningSubmissionFeedback'];
 
 export type ReadingExercise = components['schemas']['ReadingExercise'];
 export type ReadingExerciseType = ReadingExercise['tasks'][0]['type'];
@@ -59,6 +55,7 @@ export type GetAssignmentsByUserInput = components['schemas']['GetAssignmentByUs
 export type CreateSubmissionInput = components['schemas']['CreateSubmissionInput'];
 export type GetClassListByUserInput = components['schemas']['GetClassListByUserInput'];
 export type GetClassMemberInput = components['schemas']['GetClassMemberInput'];
+export type UpdateSubmissionInput = components['schemas']['UpdateSubmissionInput'];
 
 export type CreateExerciseResponse = components['schemas']['CreateExerciseResponseSchema'];
 export type CreateAssignmentsResponse = components['schemas']['CreateAssignmentsResponse'];
