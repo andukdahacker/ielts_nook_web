@@ -29,8 +29,11 @@ export type ListeningSubmissionFeedback = components['schemas']['ListeningSubmis
 export type ReadingExercise = components['schemas']['ReadingExercise'];
 export type ReadingExerciseType = ReadingExercise['tasks'][0]['type'];
 export type ReadingMultipleChoiceTask = components['schemas']['ReadingMultipleChoiceTask'];
-export type ReadingTFNGTask = components['schemas']['ReadingTFNGTaskSchema'];
-export type ReadingTask = ReadingMultipleChoiceTask | ReadingTFNGTask;
+export type ReadingTFNGTask = components['schemas']['ReadingTFNGTask'];
+export type ReadingSentenceCompletionTask = components['schemas']['ReadingSentenceCompletionTask'];
+export type ReadingYNNGTask = components['schemas']['ReadingYNNGTask'];
+export type ReadingSummaryCompletionTask = components['schemas']['ReadingSummaryCompletionTask'];
+export type ReadingTask = ReadingMultipleChoiceTask | ReadingTFNGTask | ReadingYNNGTask;
 
 export type ListeningExercise = components['schemas']['ListeningExercise'];
 export type ListeningExerciseType = ListeningExercise['tasks'][0]['type'];

@@ -1,28 +1,28 @@
-import createClient, { Middleware } from "openapi-fetch";
-import { paths } from "../schema/schema";
+import createClient, { Middleware } from 'openapi-fetch';
+import { paths } from '../schema/schema';
 
 const authMiddleware: Middleware = {
-  async onRequest({ request }) {
-    const token = localStorage.getItem("token");
+    async onRequest({ request }) {
+        const token = localStorage.getItem('token');
 
-    request.headers.set("Authorization", `Bearer ${token}`);
-    return request;
-  },
+        request.headers.set('Authorization', `Bearer ${token}`);
+        return request;
+    },
 
-  async onResponse({ response }) {
-    const { status, statusText } = response;
+    async onResponse({ response }) {
+        const { status, statusText } = response;
 
-    if (status == 401) {
-      throw new UnauthorizedError(statusText);
-    }
+        if (status == 401) {
+            throw new UnauthorizedError(statusText);
+        }
 
-    return response;
-  },
+        return response;
+    },
 };
 
 export class UnauthorizedError extends Error {}
 
-const client = createClient<paths>({ baseUrl: "http://localhost:3000" });
+const client = createClient<paths>({ baseUrl: 'http://localhost:4000' });
 
 client.use(authMiddleware);
 

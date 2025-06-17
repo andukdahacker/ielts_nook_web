@@ -2,6 +2,8 @@ import { Center, Loader } from '@mantine/core';
 import { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router';
 import ViewListentingAssignment from './components/view_listening_assignment.view';
+import ViewReadingAssignmentView from './components/view_reading_assignment.view';
+import ViewWritingAssignmentView from './components/view_writing_assignment.view';
 import useGetAssignment from './hooks/use_get_assignment';
 
 function ViewAssignmentView() {
@@ -28,7 +30,15 @@ function ViewAssignmentView() {
 
     switch (data.exercise.type) {
         case 'WRITING': {
-            return <></>;
+            return (
+                <>
+                    <ViewWritingAssignmentView
+                        exercise={data.exercise}
+                        submission={data.submission!}
+                        assignment={data.assignment}
+                    />
+                </>
+            );
         }
         case 'LISTENING': {
             return (
@@ -42,7 +52,15 @@ function ViewAssignmentView() {
             );
         }
         case 'READING': {
-            return <>View</>;
+            return (
+                <>
+                    <ViewReadingAssignmentView
+                        exercise={data.exercise}
+                        submission={data.submission!}
+                        assignment={data.assignment}
+                    />
+                </>
+            );
         }
         case 'SPEAKING':
             return <>{data.exercise.type}</>;

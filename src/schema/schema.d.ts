@@ -2665,7 +2665,7 @@ export interface components {
                 questions: {
                     order: number;
                     content: string;
-                    /** ReadingTFNGOptionSchema */
+                    /** ReadingTFNGOption */
                     correctAnswer: "TRUE" | "FALSE" | "NOT GIVEN";
                 }[];
             } | {
@@ -2683,6 +2683,24 @@ export interface components {
                     }[];
                     correctAnswer: string;
                 }[];
+            } | {
+                order: number;
+                instructions: unknown;
+                type: "Multiple choice" | "True/False/Not Given" | "Yes/No/Not Given" | "Summary Completion" | "Sentence Completion" | "Note Completion" | "Tabel Completion" | "Flowchart Completion" | "Matching heading to paragraph";
+                questions: {
+                    order: number;
+                    content: string;
+                    /** ReadingYNNGOption */
+                    correctAnswer: "YES" | "NO" | "NOT GIVEN";
+                }[];
+            } | {
+                order: number;
+                instruction: unknown;
+                questions: {
+                    order: number;
+                    correctAnswer: string;
+                }[];
+                type: "Multiple choice" | "True/False/Not Given" | "Yes/No/Not Given" | "Summary Completion" | "Sentence Completion" | "Note Completion" | "Tabel Completion" | "Flowchart Completion" | "Matching heading to paragraph";
             })[];
         };
         /** ReadingMultipleChoiceTask */
@@ -2718,27 +2736,27 @@ export interface components {
             order: number;
             value: string;
         };
-        /** ReadingTFNGTaskSchema */
-        ReadingTFNGTaskSchema: {
+        /** ReadingTFNGTask */
+        ReadingTFNGTask: {
             order: number;
             type: "Multiple choice" | "True/False/Not Given" | "Yes/No/Not Given" | "Summary Completion" | "Sentence Completion" | "Note Completion" | "Tabel Completion" | "Flowchart Completion" | "Matching heading to paragraph";
             instructions: unknown;
             questions: {
                 order: number;
                 content: string;
-                /** ReadingTFNGOptionSchema */
+                /** ReadingTFNGOption */
                 correctAnswer: "TRUE" | "FALSE" | "NOT GIVEN";
             }[];
         };
-        /** ReadingTFNGQuestionSchema */
-        ReadingTFNGQuestionSchema: {
+        /** ReadingTFNGQuestion */
+        ReadingTFNGQuestion: {
             order: number;
             content: string;
-            /** ReadingTFNGOptionSchema */
+            /** ReadingTFNGOption */
             correctAnswer: "TRUE" | "FALSE" | "NOT GIVEN";
         };
-        /** ReadingTFNGOptionSchema */
-        ReadingTFNGOptionSchema: "TRUE" | "FALSE" | "NOT GIVEN";
+        /** ReadingTFNGOption */
+        ReadingTFNGOption: "TRUE" | "FALSE" | "NOT GIVEN";
         /** ReadingSummaryCompletionTask */
         ReadingSummaryCompletionTask: {
             order: number;
@@ -2766,11 +2784,47 @@ export interface components {
             }[];
             correctAnswer: string;
         };
-        /** ReadingSummaryCompletionOptionSchema */
-        ReadingSummaryCompletionOptionSchema: {
+        /** ReadingSummaryCompletionOption */
+        ReadingSummaryCompletionOption: {
             order: number;
             value: string;
             content: string;
+        };
+        /** ReadingYNNGTask */
+        ReadingYNNGTask: {
+            order: number;
+            instructions: unknown;
+            type: "Multiple choice" | "True/False/Not Given" | "Yes/No/Not Given" | "Summary Completion" | "Sentence Completion" | "Note Completion" | "Tabel Completion" | "Flowchart Completion" | "Matching heading to paragraph";
+            questions: {
+                order: number;
+                content: string;
+                /** ReadingYNNGOption */
+                correctAnswer: "YES" | "NO" | "NOT GIVEN";
+            }[];
+        };
+        /** ReadingYNNGQuestion */
+        ReadingYNNGQuestion: {
+            order: number;
+            content: string;
+            /** ReadingYNNGOption */
+            correctAnswer: "YES" | "NO" | "NOT GIVEN";
+        };
+        /** ReadingYNNGOption */
+        ReadingYNNGOption: "YES" | "NO" | "NOT GIVEN";
+        /** ReadingSentenceCompletionTask */
+        ReadingSentenceCompletionTask: {
+            order: number;
+            instruction: unknown;
+            questions: {
+                order: number;
+                correctAnswer: string;
+            }[];
+            type: "Multiple choice" | "True/False/Not Given" | "Yes/No/Not Given" | "Summary Completion" | "Sentence Completion" | "Note Completion" | "Tabel Completion" | "Flowchart Completion" | "Matching heading to paragraph";
+        };
+        /** ReadingSentenceCompletionQuestion */
+        ReadingSentenceCompletionQuestion: {
+            order: number;
+            correctAnswer: string;
         };
         /** ListeningExercise */
         ListeningExercise: {

@@ -1,11 +1,12 @@
 import { useContext } from 'react';
 import AuthContext from '../auth/auth.context';
+import AdminClassDetailView from './admin_class_detail.view';
 import TeacherClassDetailView from './teacher_class_detail.view';
 
 function ClassDetailView() {
-    const { user } = useContext(AuthContext);
+    const { role } = useContext(AuthContext);
 
-    switch (user?.role) {
+    switch (role) {
         case 'STUDENT':
             return <>Student Class Detail</>;
         case 'TEACHER':
@@ -15,7 +16,11 @@ function ClassDetailView() {
                 </>
             );
         case 'ADMIN':
-            return <>Admin Class Detail</>;
+            return (
+                <>
+                    <AdminClassDetailView />
+                </>
+            );
         default:
             return <>Forbidden</>;
     }
